@@ -1,93 +1,72 @@
-source(if (file.exists("data_temp/00_chemins.R")) "data_temp/00_chemins.R" else "00_chemins.R", local = TRUE)
-# 08 - Reconstruire les heures par station, puis calculer les moyennes du réseau.
-# À lancer depuis le projet, après 06 (07 n'a pas besoin d'être relancé).
-# Reconstruction rétrospective : les heures intermédiaires utilisent le relevé suivant.
-# Les dates source sont des dates de mesure, PAS des dates de publication.
-library(data.table)
-
-x <- readRDS(file.path(dossier, "synop_stations_selectionnees.rds"))
-stations <- fread(file.path(dossier, "stations_selectionnees.csv"),
-                  colClasses = c(geo_id_wmo = "character"))
+# 08 - Reconstruction horaire par station, puis moyennes du reseau.
+# Methode retrospective : les heures intermediaires utilisent la mesure suivante.
+chemin <- "00_chemins.R"
+if (file.exists("data_temp/00_chemins.R")) chemin <- "data_temp/00_chemins.R"
+source(chemin, local = TRUE)
+source(file.path(racine_scripts, "fonctions_moyennes.R"), local = TRUE)
+x <- as.data.frame(readRDS(file.path(dossier, "synop_stations_selectionnees.rds")))
+stations <- read.csv(file.path(dossier, "stations_selectionnees.csv"), colClasses = c(geo_id_wmo = "character"))
 nb_stations <- nrow(stations)
-stopifnot(nrow(x) > 0, nb_stations > 0,
-          !anyNA(x$date_utc), !anyNA(stations$geo_id_wmo),
-          anyDuplicated(stations$geo_id_wmo) == 0,
-          setequal(x$geo_id_wmo, stations$geo_id_wmo),
-          all(is.na(x$t) | is.finite(x$t)), all(is.na(x$rr3) | is.finite(x$rr3)),
-          anyDuplicated(x, by = c("geo_id_wmo", "date_utc")) == 0,
-          all(as.numeric(x$date_utc) %% 10800 == 0))
-setorder(x, geo_id_wmo, date_utc)
+stopifnot(nrow(x) > 0, nb_stations > 0, !anyNA(x$date_utc), !anyNA(stations$geo_id_wmo),
+          !anyDuplicated(stations$geo_id_wmo), setequal(x$geo_id_wmo, stations$geo_id_wmo),
+          !anyDuplicated(x[, c("geo_id_wmo", "date_utc")]), all(as.numeric(x$date_utc) %% 10800 == 0),
+          all(is.na(x$t) | is.finite(x$t)), all(is.na(x$rr3) | is.finite(x$rr3)))
 debut <- as.POSIXct("2012-01-01", tz = "UTC")
 fin <- max(x$date_utc)
+liste_horaire <- list()
 
-# 1. Température : garder les mesures et interpoler seulement les intervalles de 3 h.
-x[, temperature_c := t - 273.15]
-x[, `:=`(date_suivante = shift(date_utc, type = "lead"),
-          temperature_suivante = shift(temperature_c, type = "lead")), by = geo_id_wmo]
-paires <- x[!is.na(temperature_c) & !is.na(temperature_suivante) &
-              as.numeric(date_suivante) - as.numeric(date_utc) == 10800]
-temperature <- rbindlist(c(list(x[, .(
-  geo_id_wmo, date_utc, temperature_c, temperature_interpolee = FALSE,
-  source_temperature_fin_utc = date_utc
-)]), lapply(1:2, function(h) paires[, .(
-  geo_id_wmo, date_utc = date_utc + h * 3600,
-  temperature_c = temperature_c + h / 3 * (temperature_suivante - temperature_c),
-  temperature_interpolee = TRUE, source_temperature_fin_utc = date_suivante
-)])))
+for (id in stations$geo_id_wmo) {
+  z <- x[x$geo_id_wmo == id, ]
+  z <- z[order(z$date_utc), ]
+  z$t <- z$t - 273.15
+  temperature <- data.frame(geo_id_wmo = id, date_utc = z$date_utc, temperature_c = z$t,
+                            temperature_interpolee = FALSE, source_temperature_fin_utc = z$date_utc)
 
-# 2. Pluie : cumul rr3 / 3 pour chacune des trois heures précédentes.
-# Date en FIN d'intervalle : 03 h désigne la pluie de 02 à 03 h.
-# Comme en 07, les traces (-0.1) sont approximées à 0 mm, et restent signalées.
-x[, trace_pluie := !is.na(rr3) & rr3 == -0.1]
-x[, pluie_3h_mm := fifelse(trace_pluie, 0, rr3)]
-stopifnot(all(x$pluie_3h_mm >= 0, na.rm = TRUE))
-pluie <- rbindlist(lapply(0:2, function(h) x[, .(
-  geo_id_wmo, date_utc = date_utc - h * 3600,
-  precipitation_1h_mm = pluie_3h_mm / 3,
-  trace_pluie, source_pluie_fin_utc = date_utc
-)]))
-# Vérifier la conservation des cumuls avant de couper aux bornes de la période.
-cumuls <- pluie[, .(reconstitue = sum(precipitation_1h_mm)),
-                 by = .(geo_id_wmo, source_pluie_fin_utc)]
-controle <- merge(x[, .(geo_id_wmo, source_pluie_fin_utc = date_utc, pluie_3h_mm)],
-                  cumuls, by = c("geo_id_wmo", "source_pluie_fin_utc"))
-stopifnot(isTRUE(all.equal(controle$pluie_3h_mm, controle$reconstitue)))
-rm(cumuls, controle, paires)
+  # Interpoler seulement entre deux mesures valides separees de trois heures.
+  paires <- which(diff(as.numeric(z$date_utc)) == 10800 &
+                   !is.na(head(z$t, -1)) & !is.na(tail(z$t, -1)))
+  for (h in 1:2) {
+    ajout <- temperature[paires, ]
+    ajout$date_utc <- z$date_utc[paires] + h * 3600
+    ajout$temperature_c <- z$t[paires] + h / 3 * (z$t[paires + 1] - z$t[paires])
+    ajout$temperature_interpolee <- rep(TRUE, length(paires))
+    ajout$source_temperature_fin_utc <- z$date_utc[paires + 1]
+    temperature <- rbind(temperature, ajout)
+  }
 
-# 3. Tableau horaire par station. Aucune extrapolation ou longue lacune comblée.
-horaire <- merge(temperature, pluie, by = c("geo_id_wmo", "date_utc"), all = TRUE)
-horaire <- horaire[date_utc >= debut & date_utc <= fin]
-stopifnot(anyDuplicated(horaire, by = c("geo_id_wmo", "date_utc")) == 0)
-saveRDS(horaire, file.path(dossier, "synop_stations_horaires.rds"))
-rm(temperature, pluie)
-
-# 4. Moyennes et dispersion spatiale recalculées à partir des valeurs des stations.
-# Quantiles empiriques : PAS un IC de la moyenne ni une incertitude d'interpolation.
-resumer <- function(z) {
-  z <- z[!is.na(z)]
-  n <- length(z)
-  q <- if (n >= 2) quantile(z, c(.025, .975), names = FALSE) else c(NA_real_, NA_real_)
-  list(n_stations = n, moyenne = if (n > 0) mean(z) else NA_real_,
-       ecart_type_spatial = if (n >= 2) sd(z) else NA_real_,
-       q025_spatial = q[1], q975_spatial = q[2])
+  # Repartir le cumul sur les trois heures precedentes, datees en fin d'intervalle.
+  trace <- !is.na(z$rr3) & z$rr3 == -0.1
+  z$rr3[trace] <- 0
+  stopifnot(all(z$rr3 >= 0, na.rm = TRUE))
+  pluie <- list()
+  for (h in 0:2) {
+    pluie[[h + 1]] <- data.frame(geo_id_wmo = id, date_utc = z$date_utc - h * 3600,
+      precipitation_1h_mm = z$rr3 / 3, trace_pluie = trace, source_pluie_fin_utc = z$date_utc)
+  }
+  pluie <- do.call(rbind, pluie)
+  station <- merge(temperature, pluie, by = c("geo_id_wmo", "date_utc"), all = TRUE)
+  liste_horaire[[id]] <- station[station$date_utc >= debut & station$date_utc <= fin, ]
 }
-grille <- data.table(date_utc = seq(debut, fin, by = "hour"))
-resultats <- rbindlist(lapply(c("temperature_c", "precipitation_1h_mm"), function(v) {
-  bilan <- horaire[, c(resumer(get(v)), list(n_estimees =
-    if (v == "temperature_c") sum(!is.na(temperature_c) & temperature_interpolee, na.rm = TRUE)
-    else sum(!is.na(precipitation_1h_mm)))), by = date_utc]
-  bilan <- merge(grille, bilan, by = "date_utc", all.x = TRUE)
-  bilan[is.na(n_stations), `:=`(n_stations = 0L, n_estimees = 0L)]
-  bilan[, `:=`(variable = v, n_observees = n_stations - n_estimees,
-               stations_selectionnees = nb_stations,
-               couverture_stations_pct = 100 * n_stations / nb_stations)]
-  bilan[, moins_de_80pct_stations := couverture_stations_pct < 80]
-  bilan
-}))
-setorder(resultats, date_utc, variable)
-fwrite(resultats, file.path(dossier, "moyennes_reseau_horaires.csv"))
+horaire <- do.call(rbind, liste_horaire)
+horaire <- horaire[order(horaire$geo_id_wmo, horaire$date_utc), ]
+rownames(horaire) <- NULL
+stopifnot(!anyDuplicated(horaire[, c("geo_id_wmo", "date_utc")]))
+saveRDS(horaire, file.path(dossier, "synop_stations_horaires.rds"))
+rm(liste_horaire)
+
+# Une seule ligne par heure, avec les deux series de statistiques cote a cote.
+grille <- seq(debut, fin, by = "hour")
+resultats <- data.frame(date_utc = grille, stations_selectionnees = nb_stations)
+for (v in c("temperature_c", "precipitation_1h_mm")) {
+  estimees <- rep(TRUE, nrow(horaire)) # Toutes les pluies horaires sont reconstruites.
+  if (v == "temperature_c") estimees <- !is.na(horaire$temperature_c) & horaire$temperature_interpolee
+  bilan <- resumer_reseau(horaire[[v]], horaire$date_utc, grille, nb_stations, estimees)
+  bilan$date_utc <- NULL
+  bilan$stations_selectionnees <- NULL
+  names(bilan) <- paste0(v, "_", names(bilan))
+  resultats <- cbind(resultats, bilan)
+}
 saveRDS(resultats, file.path(dossier, "moyennes_reseau_horaires.rds"))
-cat(nrow(grille), "heures ;", nb_stations, "stations. Cumuls de pluie vérifiés.\n")
-print(resultats[, .(heures_sans_donnees = sum(n_stations == 0),
-                    heures_sous_80pct = sum(moins_de_80pct_stations)), by = variable])
-print(head(resultats, 8))
+write.csv(resultats, file.path(dossier, "moyennes_reseau_horaires.csv"), row.names = FALSE, na = "")
+cat(nrow(resultats), "heures ;", nb_stations, "stations.\n")
+print(head(resultats[, c("date_utc", "temperature_c_moyenne", "precipitation_1h_mm_moyenne")]))

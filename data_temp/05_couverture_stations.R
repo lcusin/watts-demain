@@ -1,53 +1,46 @@
-source(if (file.exists("data_temp/00_chemins.R")) "data_temp/00_chemins.R" else "00_chemins.R", local = TRUE)
-# 05 - Mesurer la couverture annuelle, sans sélectionner définitivement les stations.
-library(data.table)
-
-meteo <- readRDS(file.path(dossier, "synop_metropole_nettoye.rds"))
-stations <- fread(file.path(dossier, "stations_metropole.csv"),
-                  colClasses = c(geo_id_wmo = "character"))
-noms <- stations[, .(nom = paste(sort(unique(name)), collapse = " / ")), by = geo_id_wmo]
-
-# Vérifier les horaires avant d'utiliser une grille de 3 heures.
-print(meteo[, .N, by = .(heure_utc = format(date_utc, "%H:%M:%S", tz = "UTC"))][order(heure_utc)])
+# 05 - Couverture annuelle sur une grille de trois heures.
+chemin <- "00_chemins.R"
+if (file.exists("data_temp/00_chemins.R")) chemin <- "data_temp/00_chemins.R"
+source(chemin, local = TRUE)
+meteo <- as.data.frame(readRDS(file.path(dossier, "synop_metropole_nettoye.rds")))
+stations <- read.csv(file.path(dossier, "stations_metropole.csv"), colClasses = c(geo_id_wmo = "character"))
 stopifnot(nrow(meteo) > 0, !anyNA(meteo$date_utc),
-          anyDuplicated(meteo, by = c("geo_id_wmo", "date_utc")) == 0,
-          all(as.numeric(meteo$date_utc) %% (3 * 3600) == 0))
+          !anyDuplicated(meteo[, c("geo_id_wmo", "date_utc")]),
+          all(as.numeric(meteo$date_utc) %% 10800 == 0))
+print(table(format(meteo$date_utc, "%H:%M:%S", tz = "UTC")))
 fin <- max(meteo$date_utc)
-grille <- data.table(date_utc = seq(as.POSIXct("2012-01-01", tz = "UTC"), fin, by = "3 hours"))
-grille[, annee := as.integer(format(date_utc, "%Y", tz = "UTC"))]
-attendus <- grille[, .(nb_attendus = .N), by = annee]
+grille <- seq(as.POSIXct("2012-01-01", tz = "UTC"), fin, by = "3 hours")
+attendus <- as.data.frame(table(format(grille, "%Y", tz = "UTC")))
+names(attendus) <- c("annee", "nb_attendus")
+attendus$annee <- as.integer(as.character(attendus$annee))
 
-meteo[, annee := as.integer(format(date_utc, "%Y", tz = "UTC"))]
-comptages <- meteo[, .(
-  nb_observations = .N, nb_temperature = sum(!is.na(t)),
-  nb_rr1 = sum(!is.na(rr1)), nb_rr3 = sum(!is.na(rr3))
-), by = .(geo_id_wmo, annee)]
-
-# Toutes les combinaisons station/année, même lorsqu'il n'y a aucune donnée.
-couverture <- CJ(geo_id_wmo = unique(meteo$geo_id_wmo), annee = attendus$annee)
+# Compter les valeurs presentes, puis ajouter les annees entierement absentes.
+comptages <- data.frame(geo_id_wmo = meteo$geo_id_wmo,
+  annee = as.integer(format(meteo$date_utc, "%Y", tz = "UTC")), nb_observations = 1L,
+  nb_temperature = as.integer(!is.na(meteo$t)), nb_rr1 = as.integer(!is.na(meteo$rr1)),
+  nb_rr3 = as.integer(!is.na(meteo$rr3)))
+comptages <- aggregate(comptages[, 3:6], comptages[, 1:2], sum)
+couverture <- expand.grid(geo_id_wmo = unique(meteo$geo_id_wmo), annee = attendus$annee,
+                          stringsAsFactors = FALSE)
 couverture <- merge(couverture, comptages, by = c("geo_id_wmo", "annee"), all.x = TRUE)
-for (col in c("nb_observations", "nb_temperature", "nb_rr1", "nb_rr3")) {
-  set(couverture, i = which(is.na(couverture[[col]])), j = col, value = 0L)
-}
+couverture[is.na(couverture)] <- 0
 couverture <- merge(couverture, attendus, by = "annee")
-couverture[, `:=`(
-  couverture_observations = 100 * nb_observations / nb_attendus,
-  couverture_temperature = 100 * nb_temperature / nb_attendus,
-  couverture_rr1 = 100 * nb_rr1 / nb_attendus,
-  couverture_rr3 = 100 * nb_rr3 / nb_attendus
-)]
+for (v in c("observations", "temperature", "rr1", "rr3")) {
+  couverture[[paste0("couverture_", v)]] <- 100 * couverture[[paste0("nb_", v)]] / couverture$nb_attendus
+}
+noms <- aggregate(name ~ geo_id_wmo, stations, function(z) paste(sort(unique(z)), collapse = " / "))
+names(noms)[2] <- "nom"
 couverture <- merge(couverture, noms, by = "geo_id_wmo", all.x = TRUE)
-setorder(couverture, geo_id_wmo, annee)
-tableau <- dcast(couverture, geo_id_wmo + nom ~ annee, value.var = "couverture_temperature")
+couverture <- couverture[order(couverture$geo_id_wmo, couverture$annee), ]
 
-fwrite(couverture, file.path(dossier, "couverture_stations_par_annee.csv"))
-fwrite(tableau, file.path(dossier, "couverture_temperature_tableau.csv"))
-
-# Afficher les stations déjà présentes en 2012 (ce n'est pas un seuil de qualité).
-ids <- couverture[annee == 2012 & nb_observations > 0, geo_id_wmo]
-affichage <- copy(tableau[geo_id_wmo %in% ids])
-annees <- setdiff(names(affichage), c("geo_id_wmo", "nom"))
-affichage[, (annees) := lapply(.SD, round, 1), .SDcols = annees]
-cat(length(ids), "stations présentes en 2012. Couverture de température (%) :\n")
-print(affichage, nrows = nrow(affichage))
-cat("Pour 2026, couverture calculée seulement jusqu'au", format(fin, tz = "UTC"), "UTC.\n")
+# Une colonne par annee pour lire facilement la couverture de temperature.
+tableau <- reshape(couverture[, c("geo_id_wmo", "nom", "annee", "couverture_temperature")],
+                   idvar = c("geo_id_wmo", "nom"), timevar = "annee", direction = "wide")
+names(tableau) <- sub("couverture_temperature.", "", names(tableau), fixed = TRUE)
+write.csv(couverture, file.path(dossier, "couverture_stations_par_annee.csv"), row.names = FALSE, na = "")
+write.csv(tableau, file.path(dossier, "couverture_temperature_tableau.csv"), row.names = FALSE, na = "")
+ids <- couverture$geo_id_wmo[couverture$annee == 2012 & couverture$nb_observations > 0]
+affichage <- tableau[tableau$geo_id_wmo %in% ids, ]
+affichage[, -(1:2)] <- round(affichage[, -(1:2)], 1)
+print(affichage, row.names = FALSE)
+cat("Couverture arretee au", format(fin, tz = "UTC"), "UTC.\n")

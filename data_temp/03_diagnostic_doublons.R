@@ -1,24 +1,31 @@
-source(if (file.exists("data_temp/00_chemins.R")) "data_temp/00_chemins.R" else "00_chemins.R", local = TRUE)
-# 03 - Retirer les doublons exacts et repérer les valeurs contradictoires.
-library(data.table)
-
-meteo <- readRDS(file.path(dossier, "synop_variables_brutes.rds"))
+# 03 - Supprimer les doublons exacts et reperer les contradictions.
+chemin <- "00_chemins.R"
+if (file.exists("data_temp/00_chemins.R")) chemin <- "data_temp/00_chemins.R"
+source(chemin, local = TRUE)
+meteo <- as.data.frame(readRDS(file.path(dossier, "synop_variables_brutes.rds")))
 variables <- c("t", "tn12", "tn24", "tx12", "tx24", "rr1", "rr3", "rr6", "rr12", "rr24")
-
-# Deux lignes identiques peuvent provenir de fichiers différents.
 colonnes <- setdiff(names(meteo), "fichier_source")
-x <- unique(meteo, by = colonnes)
-cat(nrow(meteo) - nrow(x), "doublons exacts retirés.\n")
 
-cles <- x[, .N, by = .(geo_id_wmo, date_utc)][N > 1]
-repetitions <- x[cles, on = .(geo_id_wmo, date_utc)]
+# Comparer seulement les lignes dont le couple station/date est repete.
+cle <- paste(meteo$geo_id_wmo, as.numeric(meteo$date_utc))
+repete <- duplicated(cle) | duplicated(cle, fromLast = TRUE)
+a_retirer <- rep(FALSE, nrow(meteo))
+a_retirer[repete] <- duplicated(meteo[repete, colonnes])
+x <- meteo[!a_retirer, ]
+cat(sum(a_retirer), "doublons exacts retires.\n")
 
-# Compter les valeurs distinctes disponibles : 12 + NA n'est pas un conflit.
-diagnostic <- repetitions[, lapply(.SD, uniqueN, na.rm = TRUE),
-                          by = .(geo_id_wmo, date_utc), .SDcols = variables]
-diagnostic[, conflit := rowSums(.SD > 1) > 0, .SDcols = variables]
-
+cle <- paste(x$geo_id_wmo, as.numeric(x$date_utc))
+repete <- duplicated(cle) | duplicated(cle, fromLast = TRUE)
+groupes <- split(which(repete), cle[repete])
+diagnostic <- x[integer(0), c("geo_id_wmo", "date_utc")]
+for (v in variables) diagnostic[[v]] <- integer(0)
+for (lignes in groupes) {
+  ligne <- x[lignes[1], c("geo_id_wmo", "date_utc")]
+  for (v in variables) ligne[[v]] <- length(unique(na.omit(x[lignes, v])))
+  diagnostic <- rbind(diagnostic, ligne)
+}
+diagnostic$conflit <- rowSums(diagnostic[, variables] > 1) > 0
+row.names(x) <- NULL
 saveRDS(x, file.path(dossier, "synop_sans_doublons_exacts.rds"))
-fwrite(diagnostic, file.path(dossier, "diagnostic_conflits.csv"))
-cat(nrow(diagnostic), "couples encore répétés, dont",
-    sum(diagnostic$conflit), "avec conflit.\n")
+write.csv(diagnostic, file.path(dossier, "diagnostic_conflits.csv"), row.names = FALSE, na = "")
+cat(nrow(diagnostic), "couples repetes, dont", sum(diagnostic$conflit), "avec conflit.\n")

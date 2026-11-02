@@ -1,48 +1,50 @@
-source(if (file.exists("data_temp/00_chemins.R")) "data_temp/00_chemins.R" else "00_chemins.R", local = TRUE)
-# 09 - Moyennes mensuelles de temperature et cumuls mensuels de pluie.
-# Apres 08 ; installer ggplot2 si besoin : install.packages("ggplot2")
-library(data.table)
+# 09 - Graphiques mensuels : une couleur par annee.
+chemin <- "00_chemins.R"
+if (file.exists("data_temp/00_chemins.R")) chemin <- "data_temp/00_chemins.R"
+source(chemin, local = TRUE)
 library(ggplot2)
-x <- readRDS(file.path(dossier, "moyennes_reseau_horaires.rds"))
-
+x <- as.data.frame(readRDS(file.path(dossier, "moyennes_reseau_horaires.rds")))
+x <- x[order(x$date_utc), ]
+stopifnot(nrow(x) > 0, !anyNA(x$date_utc), !anyDuplicated(x$date_utc),
+          all(as.numeric(x$date_utc) %% 3600 == 0), all(diff(as.numeric(x$date_utc)) == 3600))
 dir.create(sortie, recursive = TRUE, showWarnings = FALSE)
-variables <- c("temperature_c", "precipitation_1h_mm")
-stopifnot(setequal(unique(x$variable), variables), !anyNA(x$date_utc),
-          anyDuplicated(x, by = c("variable", "date_utc")) == 0,
-          all(as.numeric(x$date_utc) %% 3600 == 0),
-          all(x[, .(reguliere = all(diff(sort(as.numeric(date_utc))) == 3600)), by = variable]$reguliere))
 
-agreger_mois <- function(donnees) {
-  z <- copy(donnees)
-  # Pluie datee en fin d'intervalle : 1er du mois a 00 h -> mois precedent.
-  z[, date_mois := date_utc - 3600 * (variable == "precipitation_1h_mm")]
-  z[, mois_debut := as.Date(format(date_mois, "%Y-%m-01", tz = "UTC"))]
-  m <- z[, .(nb_heures = .N, nb_heures_valides = sum(!is.na(moyenne)),
-              nb_heures_sous_80pct_stations = sum(moins_de_80pct_stations),
-              total = sum(moyenne, na.rm = TRUE)), by = .(variable, mois_debut)]
-  m[, heures_attendues := as.integer(as.Date(format(mois_debut + 32, "%Y-%m-01")) - mois_debut) * 24L]
-  m[, valeur := fifelse(variable == "temperature_c", total / nb_heures_valides, total)]
-  m[nb_heures_valides == 0, valeur := NA_real_]
-  m[, `:=`(annee = format(mois_debut, "%Y"), mois = as.integer(format(mois_debut, "%m")),
-           couverture_horaire_pct = 100 * nb_heures_valides / heures_attendues,
-           mois_entier = nb_heures == heures_attendues,
-           completude = fifelse(nb_heures_valides == heures_attendues, "Toutes les heures", "Heures manquantes"))]
-  m[, affiche := mois_entier & couverture_horaire_pct >= 95 & annee >= "2012"]
-  m[, total := NULL]
-  setorder(m, variable, mois_debut)
-  m
+# Calculer la moyenne de temperature et la somme de pluie de chaque mois.
+liste_mois <- list()
+for (v in c("temperature_c", "precipitation_1h_mm")) {
+  dates <- x$date_utc
+  if (v == "precipitation_1h_mm") dates <- dates - 3600 # Pluie de minuit : mois precedent.
+  groupes <- split(seq_len(nrow(x)), format(dates, "%Y-%m-01", tz = "UTC"))
+  for (mois in names(groupes)) {
+    lignes <- groupes[[mois]]
+    valeurs <- x[[paste0(v, "_moyenne")]][lignes]
+    n <- sum(!is.na(valeurs))
+    valeur <- if (v == "temperature_c") mean(valeurs, na.rm = TRUE) else sum(valeurs, na.rm = TRUE)
+    if (n == 0) valeur <- NA_real_
+    debut <- as.Date(mois)
+    suivant <- as.Date(format(debut + 32, "%Y-%m-01"))
+    attendues <- as.integer(suivant - debut) * 24L
+    liste_mois[[paste(v, mois)]] <- data.frame(variable = v, mois_debut = debut,
+      nb_heures = length(lignes), nb_heures_valides = n,
+      nb_heures_sous_80pct_stations = sum(x[[paste0(v, "_moins_de_80pct_stations")]][lignes]),
+      heures_attendues = attendues, valeur = valeur, annee = format(debut, "%Y"),
+      mois = as.integer(format(debut, "%m")), couverture_horaire_pct = 100 * n / attendues,
+      mois_entier = length(lignes) == attendues,
+      completude = if (n == attendues) "Toutes les heures" else "Heures manquantes")
+  }
 }
-mensuel <- agreger_mois(x)
-# Garder les valeurs partielles dans le CSV, meme lorsqu'elles ne sont pas affichees.
-fwrite(mensuel, file.path(sortie, "resume_mensuel.csv"))
-annees <- sort(unique(mensuel[annee >= "2012", annee]))
+mensuel <- do.call(rbind, liste_mois)
+mensuel <- mensuel[order(mensuel$variable, mensuel$mois_debut), ]
+mensuel$affiche <- mensuel$mois_entier & mensuel$couverture_horaire_pct >= 95 & mensuel$annee >= "2012"
+write.csv(mensuel, file.path(sortie, "resume_mensuel.csv"), row.names = FALSE, na = "")
+annees <- sort(unique(mensuel$annee[mensuel$annee >= "2012"]))
 couleurs <- setNames(hcl.colors(length(annees), "Dark 3"), annees)
 mois_fr <- c("Jan", "F\u00e9v", "Mar", "Avr", "Mai", "Juin", "Juil", "Ao\u00fbt", "Sep", "Oct", "Nov", "D\u00e9c")
 
-tracer <- function(v, titre, axe, sous_titre, fichier) {
-  # Les NA coupent les lignes aux mois exclus, sans relier artificiellement les points.
-  g <- ggplot(mensuel[variable == v & annee >= "2012"],
-              aes(mois, fifelse(affiche, valeur, NA_real_), color = annee, group = annee)) +
+tracer <- function(variable, titre, axe, sous_titre, fichier) {
+  donnees <- mensuel[mensuel$variable == variable & mensuel$annee >= "2012", ]
+  donnees$valeur[!donnees$affiche] <- NA # Couper les lignes aux mois exclus.
+  g <- ggplot(donnees, aes(mois, valeur, color = annee, group = annee)) +
     geom_line(linewidth = 0.8, na.rm = TRUE) +
     geom_point(aes(shape = completude), size = 2, na.rm = TRUE) +
     scale_color_manual(values = couleurs, breaks = annees) +
@@ -50,8 +52,8 @@ tracer <- function(v, titre, axe, sous_titre, fichier) {
     scale_x_continuous(breaks = 1:12, labels = mois_fr, limits = c(1, 12)) +
     labs(title = titre, subtitle = sous_titre, x = NULL, y = axe, color = "Ann\u00e9e", shape = NULL,
          caption = paste0("Moyennes du r\u00e9seau, poids \u00e9gaux ; calendrier UTC.\n",
-                          "Mois tronqu\u00e9s ou < 95 % d'heures disponibles : non affich\u00e9s.\n",
-                          "Point creux : heures manquantes (cumul de pluie partiel, non corrig\u00e9).")) +
+           "Mois tronqu\u00e9s ou < 95 % d'heures disponibles : non affich\u00e9s.\n",
+           "Point creux : heures manquantes (cumul de pluie partiel, non corrig\u00e9).")) +
     theme_minimal(base_size = 12) +
     theme(panel.grid.minor = element_blank(), plot.title = element_text(face = "bold"),
           plot.caption = element_text(hjust = 0)) +
