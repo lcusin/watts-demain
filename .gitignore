@@ -7,9 +7,5 @@ venv/
 .pytest_cache/
 .DS_Store
 Thumbs.db
-data/raw/*
-!data/raw/.gitkeep
-data/processed/*
-!data/processed/.gitkeep
-results/*
-!results/.gitkeep
+
+# Les donnees brutes, preparees et les resultats sont versionnes.
