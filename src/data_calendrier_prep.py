@@ -206,6 +206,16 @@ calendrier["jour_semaine"] = (
     .dt.dayofweek
     .map(noms_jours)
 )
+# 7 colonnes binaires pour les jours de la semaine
+jours = [
+    "lundi", "mardi", "mercredi", "jeudi",
+    "vendredi", "samedi", "dimanche"
+]
+
+for jour in jours:
+    calendrier[jour] = (
+        calendrier["jour_semaine"] == jour
+    ).astype(int)
 
 calendrier["weekend"] = (
     calendrier["date"]
@@ -224,10 +234,17 @@ calendrier["jour_mois"] = calendrier["date"].dt.day
 # ==================================================
 
 colonnes_finales = [
-    "date",
+    "date", 
     #"annee",
     #"mois", 
     "jour_semaine",
+    "lundi",
+    "mardi",
+    "mercredi",
+    "jeudi",
+    "vendredi",
+    "samedi",
+    "dimanche",
     "weekend",
     "jour_ferie",
     "vacances_A",
@@ -262,6 +279,10 @@ print(calendrier["vacances_scolaires"].sum())
 print("\nValeurs manquantes :")
 print(calendrier.isna().sum())
 
+# Vérifier qu'une seule colonne de jour vaut 1 par date
+assert (calendrier[jours].sum(axis=1) == 1).all(), (
+    "Erreur : chaque date doit correspondre à un seul jour."
+)
 
 # ==================================================
 # 10. EXPORTER LE DATASET
