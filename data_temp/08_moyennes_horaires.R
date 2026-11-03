@@ -73,7 +73,7 @@ saveRDS(resultats, file.path(dossier, "moyennes_reseau_horaires.rds"))
 export <- resultats
 export$date_utc <- format(export$date_utc, "%Y-%m-%d %H:%M:%S", tz = "UTC")
 write.csv(export, file.path(dossier, "moyennes_reseau_horaires.csv"),
-          row.names = FALSE, na = "")
+          row.names = FALSE, na = "", quote = FALSE)
 
 cat(nrow(resultats), "heures ;", nb_stations, "stations.\n")
 print(head(export))
