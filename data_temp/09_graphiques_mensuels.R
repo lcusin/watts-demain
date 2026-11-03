@@ -26,7 +26,6 @@ for (v in c("temperature_c", "precipitation_1h_mm")) {
     attendues <- as.integer(suivant - debut) * 24L
     liste_mois[[paste(v, mois)]] <- data.frame(variable = v, mois_debut = debut,
       nb_heures = length(lignes), nb_heures_valides = n,
-      nb_heures_sous_80pct_stations = sum(x[[paste0(v, "_moins_de_80pct_stations")]][lignes]),
       heures_attendues = attendues, valeur = valeur, annee = format(debut, "%Y"),
       mois = as.integer(format(debut, "%m")), couverture_horaire_pct = 100 * n / attendues,
       mois_entier = length(lignes) == attendues,

@@ -3,7 +3,6 @@
 chemin <- "00_chemins.R"
 if (file.exists("data_temp/00_chemins.R")) chemin <- "data_temp/00_chemins.R"
 source(chemin, local = TRUE)
-source(file.path(racine_scripts, "fonctions_moyennes.R"), local = TRUE)
 x <- as.data.frame(readRDS(file.path(dossier, "synop_stations_selectionnees.rds")))
 stations <- read.csv(file.path(dossier, "stations_selectionnees.csv"), colClasses = c(geo_id_wmo = "character"))
 nb_stations <- nrow(stations)
@@ -56,17 +55,25 @@ rm(liste_horaire)
 
 # Une seule ligne par heure, avec les deux series de statistiques cote a cote.
 grille <- seq(debut, fin, by = "hour")
-resultats <- data.frame(date_utc = grille, stations_selectionnees = nb_stations)
+resultats <- data.frame(date_utc = grille)
+position <- match(horaire$date_utc, grille)
 for (v in c("temperature_c", "precipitation_1h_mm")) {
-  estimees <- rep(TRUE, nrow(horaire)) # Toutes les pluies horaires sont reconstruites.
-  if (v == "temperature_c") estimees <- !is.na(horaire$temperature_c) & horaire$temperature_interpolee
-  bilan <- resumer_reseau(horaire[[v]], horaire$date_utc, grille, nb_stations, estimees)
-  bilan$date_utc <- NULL
-  bilan$stations_selectionnees <- NULL
-  names(bilan) <- paste0(v, "_", names(bilan))
-  resultats <- cbind(resultats, bilan)
+  groupes <- split(horaire[[v]], position)
+  moyennes <- sapply(groupes, mean, na.rm = TRUE)
+  ecarts <- sapply(groupes, sd, na.rm = TRUE)
+  moyennes[is.nan(moyennes)] <- NA_real_
+  lignes <- as.integer(names(groupes))
+  resultats[[paste0(v, "_moyenne")]] <- NA_real_
+  resultats[[paste0(v, "_ecart_type")]] <- NA_real_
+  resultats[lignes, paste0(v, "_moyenne")] <- moyennes
+  resultats[lignes, paste0(v, "_ecart_type")] <- ecarts
 }
 saveRDS(resultats, file.path(dossier, "moyennes_reseau_horaires.rds"))
-write.csv(resultats, file.path(dossier, "moyennes_reseau_horaires.csv"), row.names = FALSE, na = "")
+
+export <- resultats
+export$date_utc <- format(export$date_utc, "%Y-%m-%d %H:%M:%S", tz = "UTC")
+write.csv(export, file.path(dossier, "moyennes_reseau_horaires.csv"),
+          row.names = FALSE, na = "")
+
 cat(nrow(resultats), "heures ;", nb_stations, "stations.\n")
-print(head(resultats[, c("date_utc", "temperature_c_moyenne", "precipitation_1h_mm_moyenne")]))
+print(head(export))
