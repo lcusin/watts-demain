@@ -1,4 +1,4 @@
-date_utc,temperature_c_moyenne,temperature_c_ecart_type,precipitation_1h_mm_moyenne,precipitation_1h_mm_ecart_type
+horodatage,temperature_c_moyenne,temperature_c_ecart_type,precipitation_1h_mm_moyenne,precipitation_1h_mm_ecart_type
 2012-01-01 00:00:00,10.9527777777778,2.64169708559924,0.0895238095238095,0.168765496228011
 2012-01-01 01:00:00,10.875,2.66165451588007,0.099047619047619,0.172161520581694
 2012-01-01 02:00:00,10.7972222222222,2.695656412094,0.099047619047619,0.172161520581694
