@@ -151,3 +151,39 @@ Les graphiques mensuels utilisent également les limites des mois en UTC. Ils ne
 - Si les données RTE ne contiennent que des heures locales sans décalage explicite, examiner le traitement de l'heure répétée avant leur conversion en UTC.
 
 Pour une prévision réalisée à **14 h en France**, l'instant de référence est donc **13 h UTC en hiver et 12 h UTC en été**. Ce point doit être pris en compte pour n'utiliser que les informations disponibles au moment de la prévision. La reconstruction météo actuelle reste rétrospective, puisqu'elle utilise parfois la mesure suivante pour estimer une heure intermédiaire.
+
+## Météo interpolée : disponibilité et risque de fuite d'information
+
+### Le problème
+
+Le projet demande de prévoir, chaque jour J à 14 h en France, les 24 consommations horaires de J+1. Une variable explicative doit donc pouvoir être calculée avec les informations réellement disponibles à cette origine de prévision.
+
+L'interpolation n'est pas un problème en soi. Le risque apparaît lorsqu'une valeur datée avant l'origine utilise une mesure source postérieure. Par exemple, en hiver, 14 h en France correspond à 13 h UTC : la température interpolée à 13 h UTC entre les observations de 12 h et 15 h UTC utilise la mesure de 15 h, encore inconnue. Filtrer uniquement la date de la valeur interpolée ne suffit donc pas. La pluie présente le même problème : une valeur horaire obtenue en divisant un cumul de trois heures n'est disponible qu'une fois ce cumul mesuré et publié.
+
+Le fichier détaillé `synop_stations_horaires.rds` conserve `source_temperature_fin_utc` et `source_pluie_fin_utc`. Ces colonnes permettent d'identifier la dernière observation nécessaire, mais son heure de mesure ne garantit pas sa disponibilité immédiate : il faut aussi considérer le délai de publication.
+
+### Pourquoi cela compte même si les données sont déjà publiées
+
+Utiliser les observations historiques disponibles pour entraîner un modèle destiné à 2027 n'est pas, en soi, une fuite vers 2027. Les consommations historiques constituent les réponses connues nécessaires à l'apprentissage. En revanche, les variables de chaque exemple d'entraînement doivent être construites comme elles pourront l'être au moment de la prévision réelle.
+
+Lors d'une validation ou d'un test historique, on simule une prévision à une date passée : les données devenues disponibles après cette origine doivent être cachées, même si nous pouvons les télécharger aujourd'hui. Sinon, les performances mesurent un accès à des informations futures. Prévoir chaque lendemain pendant 2027 correspond au scénario du projet ; prévoir toute l'année 2027 en une seule fois constitue un autre problème.
+
+### Solution simple retenue pour commencer
+
+Nous pouvons conserver le fichier interpolé et utiliser des résumés de la météo de **J−1** pour la prévision produite à **J, 14 h** : moyenne, minimum et maximum des températures horaires moyennes du réseau, et cumul des précipitations horaires moyennes du réseau. Ces minimum et maximum sont calculés sur la série agrégée, pas à partir des variables SYNOP de température minimale ou maximale. Des résumés sur les sept jours précédents pourront être ajoutés ensuite.
+
+Cette marge évite de dépendre des observations de l'après-midi de J, sous réserve que les mesures sources de la veille soient effectivement publiées à l'origine. Les journées seront définies en heure française (`Europe/Paris`), tout en conservant l'UTC pour comparer les instants. Pour les précipitations datées en fin d'intervalle, l'heure se terminant à minuit appartient à la journée qui vient de s'achever. Une journée comportant des valeurs manquantes ne doit pas être considérée comme complète : en particulier, un cumul de pluie partiel ne doit pas être assimilé à un total observé complet.
+
+**Décalage à retenir :** pour une ligne dont la cible est J+1, la météo de J−1 correspond à **deux jours calendaires avant la date cible**. Exemple : le 10 janvier à 14 h, nous prévoyons le 11 janvier avec les résumés météo du 9 janvier. Il faut joindre les résumés par date, et non décaler d'une ligne un tableau horaire ni supposer que chaque journée française dure exactement 24 heures.
+
+### Comparaisons prévues
+
+| Scénario | Variables utilisées |
+| --- | --- |
+| Sans météo | Consommation passée disponible à l'origine + calendrier de J+1 |
+| Météo passée | Les mêmes variables + résumés météo de J−1 |
+| Météo parfaite | Les mêmes variables + météo observée de J+1, uniquement comme comparaison a posteriori |
+
+Le scénario à météo parfaite doit être présenté séparément : il n'est pas déployable avec de seules observations SYNOP. Si la météo de J−1 apporte trop peu d'information, nous pourrons ajouter la dernière observation brute réellement disponible à 14 h, sans interpolation nécessitant une mesure future, ou utiliser des prévisions météo dont la date d'émission précède l'origine.
+
+Ces règles devront être appliquées de la même façon à l'entraînement, à la validation et au test. Cette note décrit la construction à mettre en place : la simple fusion des tableaux ne réalise pas encore ce filtrage de disponibilité.

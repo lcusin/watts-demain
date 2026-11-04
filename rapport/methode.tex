@@ -1,0 +1,84 @@
+\section{Méthodes}
+\noindent
+
+\subsection{Récupération et préparations des données}
+\noindent
+
+\subsubsection{Sources et périmètre}
+
+
+\begin{table}[H]
+    \centering
+    \fontsize{10}{12}\selectfont
+    \renewcommand{\arraystretch}{1.3}
+    \caption{Source des données utilisées pour l'analyse et la modélisation.}
+    \begin{tabularx}{\linewidth}{p{2.5cm} X X X X X}
+        \toprule
+        Données & Source & Période \newline disponible & Granularité initiale & Variables \newline retenues & Unités \\
+        \midrule
+        Consommation \newline électrique & \cite{rte_eco2mix_2026} & Depuis 2012 & 30 minutes & Consommation & MWh \\
+        Météo & \cite{meteo_france_synop_2026} & Depuis 1996 & 3 heures & Température, précipitations & ° K, mm \\
+        Calendrier & N/A & N/A & 1 jour & Date, jours \newline fériés et \newline vacances & N/A \\
+        \bottomrule
+    \end{tabularx}
+    
+    \label{tab:scenarios}
+\end{table}
+
+\subsubsection{Construction du tableau horaire}
+
+- Consommation : nettoyage, agrégation des demi-heures et convention retenue pour dater la moyenne. \newline
+- Météo : stations métropolitaines retenues, seuil de couverture de la température et des précipitations, moyenne spatiale à poids égaux, conversion des unités et reconstruction horaire. \newline
+- Préciser que l'écart-type météo mesure la dispersion entre stations, pas l'incertitude de la moyenne nationale.\newline
+- Calendrier : jour, heure, week-end, jours fériés et vacances par zone ; justification des variables retenues.\newline
+- Jointure temporelle, vérification du fuseau RTE, traitement des doublons, valeurs manquantes et observations atypiques.\newline
+- Changements d'heure : expliquer la convention permettant de traiter la demande de 24 cibles malgré les journées françaises de 23 ou 25 heures ; documenter toute exclusion.
+
+\subsubsection{Analyse exploratoire}
+
+Explorer les données d'apprentissage pour orienter les modèles sans utiliser le test final pour choisir les variables.
+
+- Cycles journalier et hebdomadaire, saisonnalité annuelle. \newline
+- Relation température–consommation et effets calendaires.\newline
+- Tendances, ruptures de régime et observations atypiques, sans suppression automatique des événements réels.
+
+Figures proposées : profils horaires et saisonniers ; relation température–consommation ou de série longue montrant les ruptures. 
+
+
+\subsection{Benchmarks et modèles}
+\noindent
+
+\begin{algorithm}[h]
+    \caption{Un superbe algorithme}\label{alg:justanalgorithm}
+    \textit{Entrées}
+    \begin{itemize}
+        
+        \item[$\bullet$] $Variable = $ description de la variable
+        \item[$\bullet$] $Variable = $ description de la variable
+        \item[$\bullet$] $Variable = $ description de la variable
+        \item[$\bullet$] $Variable = $ description de la variable
+    \end{itemize}
+    \textit{Initialisations}
+    \begin{itemize}
+        \item[$\bullet$] $Variable = valeur$
+        \item[$\bullet$] Effectuer une action
+    \end{itemize}
+    \textit{Calculs}\\
+        \For{$variable \gets 0$ \KwTo $Variable$ \KwBy $1$}{
+            \ForEach{$truc \in machin$}{
+                Faire à $truc$ quelque chose prenant en compte $Variable$ \\
+                Mise à jour de $machin$
+            }
+        $Variable = Variable \times Variable$
+        }
+    \textit{Sorties}
+    \begin{itemize}
+        \item[$\bullet$] Ce que l'on sort de l'algorithme
+    \end{itemize}
+\end{algorithm}
+
+\subsection{Validation chronologique et métriques}
+\noindent
+
+\subsubsection{Sous-sous-section}
+\noindent
