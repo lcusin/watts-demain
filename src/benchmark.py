@@ -32,7 +32,7 @@ import matplotlib.pyplot as plt
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Chemin du dossier contenant les données préparées.
-DOSSIER_DATA = BASE_DIR / "data" / "processed"
+DOSSIER_DATA = BASE_DIR / "data" / "merge"
 
 # Charger les données d'entraînement (2012-2023).
 train = pd.read_csv(
@@ -325,7 +325,7 @@ else:
 import matplotlib.pyplot as plt
 
 # Dossier où enregistrer les graphiques
-DOSSIER_GRAPHIQUES = BASE_DIR / "data_temp" / "graphiques"
+DOSSIER_GRAPHIQUES = BASE_DIR / "data" / "conso" / "graphiques"
 
 # Créer le dossier s'il n'existe pas
 DOSSIER_GRAPHIQUES.mkdir(parents=True, exist_ok=True)

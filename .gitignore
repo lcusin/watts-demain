@@ -7,5 +7,6 @@ venv/
 .pytest_cache/
 .DS_Store
 Thumbs.db
+/Archives/
 
 # Les donnees brutes, preparees et les resultats sont versionnes.

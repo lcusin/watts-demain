@@ -12,7 +12,7 @@ sns.set_theme(style="whitegrid")
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Chemin du dataset
-FICHIER = BASE_DIR / "data" / "processed" / "donnees_combinees.csv"
+FICHIER = BASE_DIR / "data" / "merge" / "donnees_combinees.csv"
 
 # Charger le dataset
 df = pd.read_csv(FICHIER)
@@ -64,7 +64,7 @@ plt.grid(True)
 plt.tight_layout()
 
 # Créer le dossier pour les graphiques
-DOSSIER_GRAPHIQUES = BASE_DIR / "data_temp" / "graphiques"
+DOSSIER_GRAPHIQUES = BASE_DIR / "data" / "conso" / "graphiques"
 DOSSIER_GRAPHIQUES.mkdir(parents=True, exist_ok=True)
 
 # Sauvegarder le graphique

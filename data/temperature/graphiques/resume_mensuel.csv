@@ -1,0 +1,350 @@
+variable,mois_debut,nb_heures,nb_heures_valides,heures_attendues,valeur,annee,mois,couverture_horaire_pct,mois_entier,completude,affiche
+precipitation_1h_mm,2011-12-01,1,1,744,0.0895238095238095,2011,12,0.13440860215053763,False,Heures manquantes,False
+precipitation_1h_mm,2012-01-01,744,744,744,43.74242296918765,2012,1,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2012-02-01,696,696,696,9.673655462184858,2012,2,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2012-03-01,744,744,744,24.814780578898212,2012,3,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2012-04-01,720,720,720,112.08595439348757,2012,4,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2012-05-01,744,744,744,73.86893716309274,2012,5,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2012-06-01,720,720,720,71.93649327967162,2012,6,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2012-07-01,744,744,744,57.77045903045901,2012,7,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2012-08-01,744,744,744,41.031725843490534,2012,8,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2012-09-01,720,720,720,55.25271557271556,2012,9,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2012-10-01,744,744,744,105.85095648002667,2012,10,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2012-11-01,720,720,720,78.68985262573496,2012,11,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2012-12-01,744,744,744,95.19083560802723,2012,12,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2013-01-01,744,744,744,74.67984063895827,2013,1,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2013-02-01,672,672,672,56.13718790218789,2013,2,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2013-03-01,744,744,744,77.55567592802885,2013,3,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2013-04-01,720,720,720,70.15885885885884,2013,4,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2013-05-01,744,744,744,106.89284803520096,2013,5,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2013-06-01,720,720,720,55.23493501905265,2013,6,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2013-07-01,744,744,744,49.89357483533952,2013,7,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2013-08-01,744,744,744,36.41583099906627,2013,8,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2013-09-01,720,720,720,59.205829737300306,2013,9,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2013-10-01,744,744,744,82.99947737653618,2013,10,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2013-11-01,720,720,720,108.7599131675602,2013,11,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2013-12-01,744,744,744,67.44272894743482,2013,12,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2014-01-01,744,744,744,108.21626555126552,2014,1,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2014-02-01,672,672,672,96.4705922041216,2014,2,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2014-03-01,744,744,744,39.78365722865721,2014,3,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2014-04-01,720,720,720,47.87905619905618,2014,4,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2014-05-01,744,744,744,67.57795581295579,2014,5,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2014-06-01,720,720,720,46.49053839553838,2014,6,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2014-07-01,744,744,744,90.5136851136851,2014,7,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2014-08-01,744,744,744,83.13134314987254,2014,8,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2014-09-01,720,720,720,44.72218790218789,2014,9,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2014-10-01,744,744,744,63.516415225826975,2014,10,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2014-11-01,720,720,720,125.16794887506092,2014,11,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2014-12-01,744,744,744,54.15757614757612,2014,12,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2015-01-01,744,744,744,71.02376018876018,2015,1,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2015-02-01,672,672,672,61.97071630453982,2015,2,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2015-03-01,744,744,744,45.491450526156385,2015,3,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2015-04-01,720,720,720,51.08086695939636,2015,4,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2015-05-01,744,744,744,46.00525336260628,2015,5,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2015-06-01,720,720,720,47.64714881898704,2015,6,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2015-07-01,744,744,744,27.283134952179054,2015,7,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2015-08-01,744,744,744,82.42035639153285,2015,8,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2015-09-01,720,720,720,68.8498664592782,2015,9,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2015-10-01,744,744,744,56.509817717832405,2015,10,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2015-11-01,720,720,720,57.17751474633826,2015,11,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2015-12-01,744,741,744,22.13413076942487,2015,12,99.59677419354838,True,Heures manquantes,True
+precipitation_1h_mm,2016-01-01,744,744,744,94.17139467867406,2016,1,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2016-02-01,696,696,696,87.07993193346132,2016,2,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2016-03-01,744,744,744,66.84039722973544,2016,3,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2016-04-01,720,720,720,63.08979685567918,2016,4,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2016-05-01,744,744,744,91.19358476597932,2016,5,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2016-06-01,720,720,720,71.55751248574776,2016,6,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2016-07-01,744,744,744,31.116396901102767,2016,7,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2016-08-01,744,744,744,24.729755690564502,2016,8,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2016-09-01,720,720,720,39.75435889671182,2016,9,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2016-10-01,744,744,744,60.44736164736164,2016,10,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2016-11-01,720,720,720,85.36651765210587,2016,11,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2016-12-01,744,744,744,16.13481123981123,2016,12,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2017-01-01,744,744,744,37.11410767910766,2017,1,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2017-02-01,672,672,672,55.522902187902176,2017,2,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2017-03-01,744,744,744,65.48709566709564,2017,3,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2017-04-01,720,720,720,28.712134529487464,2017,4,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2017-05-01,744,744,744,70.13971559795087,2017,5,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2017-06-01,720,720,720,53.43401139193358,2017,6,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2017-07-01,744,744,744,41.761876876876855,2017,7,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2017-08-01,744,732,744,50.9939656845539,2017,8,98.38709677419355,True,Heures manquantes,True
+precipitation_1h_mm,2017-09-01,720,720,720,64.40549978549976,2017,9,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2017-10-01,744,744,744,26.39722436722435,2017,10,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2017-11-01,720,711,720,59.6569455169455,2017,11,98.75,True,Heures manquantes,True
+precipitation_1h_mm,2017-12-01,744,741,744,94.87545259545257,2017,12,99.59677419354838,True,Heures manquantes,True
+precipitation_1h_mm,2018-01-01,744,744,744,112.65090531708177,2018,1,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2018-02-01,672,672,672,51.41126555126553,2018,2,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2018-03-01,744,744,744,90.58441125999946,2018,3,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2018-04-01,720,720,720,63.586269841269825,2018,4,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2018-05-01,744,744,744,80.13117117117115,2018,5,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2018-06-01,720,720,720,65.15656635627222,2018,6,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2018-07-01,744,735,744,46.848566002977755,2018,7,98.79032258064517,True,Heures manquantes,True
+precipitation_1h_mm,2018-08-01,744,744,744,37.08065510889038,2018,8,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2018-09-01,720,720,720,23.51112360259418,2018,9,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2018-10-01,744,738,744,76.40766964443432,2018,10,99.19354838709677,True,Heures manquantes,True
+precipitation_1h_mm,2018-11-01,720,720,720,76.26622908622906,2018,11,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2018-12-01,744,744,744,69.11215572715571,2018,12,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2019-01-01,744,744,744,46.8506542256542,2019,1,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2019-02-01,672,672,672,35.44018876018875,2019,2,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2019-03-01,744,744,744,35.995965250965234,2019,3,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2019-04-01,720,720,720,64.53449983597041,2019,4,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2019-05-01,744,744,744,54.97091162591161,2019,5,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2019-06-01,720,720,720,58.52579940903468,2019,6,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2019-07-01,744,738,744,31.95487407575642,2019,7,99.19354838709677,True,Heures manquantes,True
+precipitation_1h_mm,2019-08-01,744,744,744,42.25092272945213,2019,8,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2019-09-01,720,720,720,40.901777323542014,2019,9,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2019-10-01,744,744,744,119.60142428142427,2019,10,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2019-11-01,720,720,720,143.29098296157116,2019,11,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2019-12-01,744,744,744,99.58209465768286,2019,12,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2020-01-01,744,744,744,44.24152597976125,2020,1,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2020-02-01,696,696,696,64.81330759330757,2020,2,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2020-03-01,744,744,744,62.106846846846835,2020,3,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2020-04-01,720,717,720,49.91471976177857,2020,4,99.58333333333333,True,Heures manquantes,True
+precipitation_1h_mm,2020-05-01,744,744,744,61.96659032982561,2020,5,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2020-06-01,720,720,720,79.42747318747317,2020,6,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2020-07-01,744,744,744,13.929339098456733,2020,7,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2020-08-01,744,744,744,54.06779279279277,2020,8,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2020-09-01,720,720,720,53.95894718247658,2020,9,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2020-10-01,744,744,744,107.30259810230396,2020,10,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2020-11-01,720,720,720,30.567635255576416,2020,11,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2020-12-01,744,741,744,119.96277836277832,2020,12,99.59677419354838,True,Heures manquantes,True
+precipitation_1h_mm,2021-01-01,744,744,744,90.08509438009435,2021,1,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2021-02-01,672,672,672,45.82732556085495,2021,2,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2021-03-01,744,744,744,25.801201201201184,2021,3,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2021-04-01,720,720,720,34.55625944625943,2021,4,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2021-05-01,744,744,744,88.39132043808512,2021,5,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2021-06-01,720,720,720,88.12964153228859,2021,6,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2021-07-01,744,744,744,73.76502384737677,2021,7,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2021-08-01,744,744,744,32.44209847739258,2021,8,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2021-09-01,720,720,720,58.51182454513335,2021,9,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2021-10-01,744,744,744,67.53456134706133,2021,10,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2021-11-01,720,720,720,54.50361128890539,2021,11,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2021-12-01,744,738,744,81.45402402402401,2021,12,99.19354838709677,True,Heures manquantes,True
+precipitation_1h_mm,2022-01-01,744,744,744,39.752510661922415,2022,1,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2022-02-01,672,672,672,32.23744542862188,2022,2,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2022-03-01,744,744,744,36.95112729612728,2022,3,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2022-04-01,720,720,720,43.50370870870869,2022,4,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2022-05-01,744,744,744,22.919305019305,2022,5,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2022-06-01,720,720,720,79.34826898326897,2022,6,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2022-07-01,744,744,744,8.847471042471035,2022,7,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2022-08-01,744,744,744,37.07410351527997,2022,8,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2022-09-01,720,720,720,70.28252681252678,2022,9,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2022-10-01,744,744,744,48.418155298155284,2022,10,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2022-11-01,720,720,720,94.81568211068209,2022,11,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2022-12-01,744,744,744,67.22256327756325,2022,12,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2023-01-01,744,744,744,61.599036641683675,2023,1,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2023-02-01,672,657,672,13.309551063668703,2023,2,97.76785714285714,True,Heures manquantes,True
+precipitation_1h_mm,2023-03-01,744,744,744,73.00647147147146,2023,3,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2023-04-01,720,720,720,52.50883526383524,2023,4,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2023-05-01,744,744,744,55.950036212683244,2023,5,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2023-06-01,720,720,720,66.44245855098794,2023,6,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2023-07-01,744,720,744,45.24719219219217,2023,7,96.7741935483871,True,Heures manquantes,True
+precipitation_1h_mm,2023-08-01,744,744,744,51.47701817172404,2023,8,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2023-09-01,720,720,720,45.68051984757866,2023,9,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2023-10-01,744,744,744,98.39836550836549,2023,10,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2023-11-01,720,720,720,116.86693264693263,2023,11,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2023-12-01,744,744,744,69.15250107250105,2023,12,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2024-01-01,744,744,744,56.06233590733589,2024,1,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2024-02-01,696,693,696,86.64779254043958,2024,2,99.56896551724138,True,Heures manquantes,True
+precipitation_1h_mm,2024-03-01,744,744,744,98.64048691548689,2024,3,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2024-04-01,720,720,720,53.57766194766192,2024,4,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2024-05-01,744,744,744,103.78440583440582,2024,5,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2024-06-01,720,720,720,59.52493779493777,2024,6,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2024-07-01,744,744,744,45.06228960052488,2024,7,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2024-08-01,744,744,744,44.20418918918917,2024,8,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2024-09-01,720,720,720,94.01399399399398,2024,9,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2024-10-01,744,744,744,106.9603968253968,2024,10,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2024-11-01,720,720,720,52.122288717288704,2024,11,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2024-12-01,744,744,744,50.72779897544602,2024,12,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2025-01-01,744,744,744,99.87995306230599,2025,1,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2025-02-01,672,669,672,40.85676711470827,2025,2,99.55357142857143,True,Heures manquantes,True
+precipitation_1h_mm,2025-03-01,744,744,744,46.27748528465438,2025,3,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2025-04-01,720,717,720,59.69866580866579,2025,4,99.58333333333333,True,Heures manquantes,True
+precipitation_1h_mm,2025-05-01,744,744,744,44.50838311573604,2025,5,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2025-06-01,720,720,720,39.37644095967623,2025,6,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2025-07-01,744,744,744,54.80889371801135,2025,7,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2025-08-01,744,744,744,49.63879141173257,2025,8,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2025-09-01,720,720,720,76.87167739167737,2025,9,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2025-10-01,744,744,744,67.83643543543542,2025,10,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2025-11-01,720,720,720,68.05028238322353,2025,11,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2025-12-01,744,744,744,66.63411196911194,2025,12,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2026-01-01,744,744,744,96.98114757614755,2026,1,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2026-02-01,672,672,672,113.12470827970826,2026,2,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2026-03-01,744,744,744,45.16910629116509,2026,3,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2026-04-01,720,699,720,19.930835395835388,2026,4,97.08333333333333,True,Heures manquantes,True
+precipitation_1h_mm,2026-05-01,744,744,744,68.45101887601885,2026,5,100.0,True,Toutes les heures,True
+precipitation_1h_mm,2026-06-01,549,549,720,24.12120763620763,2026,6,76.25,False,Heures manquantes,False
+temperature_c,2012-01-01,744,744,744,5.834701293396169,2012,1,100.0,True,Toutes les heures,True
+temperature_c,2012-02-01,696,696,696,1.4756221657071273,2012,2,100.0,True,Toutes les heures,True
+temperature_c,2012-03-01,744,744,744,9.972178592763292,2012,3,100.0,True,Toutes les heures,True
+temperature_c,2012-04-01,720,720,720,9.851848274524885,2012,4,100.0,True,Toutes les heures,True
+temperature_c,2012-05-01,744,744,744,15.240492531275518,2012,5,100.0,True,Toutes les heures,True
+temperature_c,2012-06-01,720,720,720,18.146766337896896,2012,6,100.0,True,Toutes les heures,True
+temperature_c,2012-07-01,744,744,744,19.180023897745695,2012,7,100.0,True,Toutes les heures,True
+temperature_c,2012-08-01,744,744,744,21.038054151501754,2012,8,100.0,True,Toutes les heures,True
+temperature_c,2012-09-01,720,720,720,16.474552403594092,2012,9,100.0,True,Toutes les heures,True
+temperature_c,2012-10-01,744,744,744,13.176788757099414,2012,10,100.0,True,Toutes les heures,True
+temperature_c,2012-11-01,720,720,720,8.481576634045743,2012,11,100.0,True,Toutes les heures,True
+temperature_c,2012-12-01,744,744,744,6.299979731441265,2012,12,100.0,True,Toutes les heures,True
+temperature_c,2013-01-01,744,744,744,4.256359527730518,2013,1,100.0,True,Toutes les heures,True
+temperature_c,2013-02-01,672,672,672,3.2577383793232233,2013,2,100.0,True,Toutes les heures,True
+temperature_c,2013-03-01,744,744,744,6.451759729199268,2013,3,100.0,True,Toutes les heures,True
+temperature_c,2013-04-01,720,720,720,10.398226935268625,2013,4,100.0,True,Toutes les heures,True
+temperature_c,2013-05-01,744,744,744,12.005185726523509,2013,5,100.0,True,Toutes les heures,True
+temperature_c,2013-06-01,720,720,720,16.83093860825113,2013,6,100.0,True,Toutes les heures,True
+temperature_c,2013-07-01,744,744,744,21.9144204291714,2013,7,100.0,True,Toutes les heures,True
+temperature_c,2013-08-01,744,744,744,20.048986185460354,2013,8,100.0,True,Toutes les heures,True
+temperature_c,2013-09-01,720,720,720,17.03102110899417,2013,9,100.0,True,Toutes les heures,True
+temperature_c,2013-10-01,744,744,744,14.485764660194237,2013,10,100.0,True,Toutes les heures,True
+temperature_c,2013-11-01,720,720,720,7.55153076238005,2013,11,100.0,True,Toutes les heures,True
+temperature_c,2013-12-01,744,744,744,5.802947552967736,2013,12,100.0,True,Toutes les heures,True
+temperature_c,2014-01-01,744,744,744,6.998435921520621,2014,1,100.0,True,Toutes les heures,True
+temperature_c,2014-02-01,672,672,672,7.136821748406592,2014,2,100.0,True,Toutes les heures,True
+temperature_c,2014-03-01,744,744,744,9.073036350256487,2014,3,100.0,True,Toutes les heures,True
+temperature_c,2014-04-01,720,720,720,12.384246130058655,2014,4,100.0,True,Toutes les heures,True
+temperature_c,2014-05-01,744,744,744,13.973013335916583,2014,5,100.0,True,Toutes les heures,True
+temperature_c,2014-06-01,720,720,720,18.966341237070427,2014,6,100.0,True,Toutes les heures,True
+temperature_c,2014-07-01,744,744,744,19.831491500140718,2014,7,100.0,True,Toutes les heures,True
+temperature_c,2014-08-01,744,744,744,18.2820787925022,2014,8,100.0,True,Toutes les heures,True
+temperature_c,2014-09-01,720,720,720,17.986535064826754,2014,9,100.0,True,Toutes les heures,True
+temperature_c,2014-10-01,744,744,744,14.946490100522382,2014,10,100.0,True,Toutes les heures,True
+temperature_c,2014-11-01,720,720,720,10.544861405569762,2014,11,100.0,True,Toutes les heures,True
+temperature_c,2014-12-01,744,744,744,5.814431669572822,2014,12,100.0,True,Toutes les heures,True
+temperature_c,2015-01-01,744,744,744,5.053351436113556,2015,1,100.0,True,Toutes les heures,True
+temperature_c,2015-02-01,672,672,672,4.2683166904149275,2015,2,100.0,True,Toutes les heures,True
+temperature_c,2015-03-01,744,744,744,8.440199311598766,2015,3,100.0,True,Toutes les heures,True
+temperature_c,2015-04-01,720,720,720,12.147063528865026,2015,4,100.0,True,Toutes les heures,True
+temperature_c,2015-05-01,744,744,744,15.000910772523698,2015,5,100.0,True,Toutes les heures,True
+temperature_c,2015-06-01,720,720,720,19.2991745875778,2015,6,100.0,True,Toutes les heures,True
+temperature_c,2015-07-01,744,744,744,22.009635178707637,2015,7,100.0,True,Toutes les heures,True
+temperature_c,2015-08-01,744,744,744,20.691716001037655,2015,8,100.0,True,Toutes les heures,True
+temperature_c,2015-09-01,720,720,720,15.487503040664826,2015,9,100.0,True,Toutes les heures,True
+temperature_c,2015-10-01,744,744,744,11.91630988639767,2015,10,100.0,True,Toutes les heures,True
+temperature_c,2015-11-01,720,720,720,10.591137931173492,2015,11,100.0,True,Toutes les heures,True
+temperature_c,2015-12-01,744,739,744,8.943858911927867,2015,12,99.32795698924731,True,Heures manquantes,True
+temperature_c,2016-01-01,744,744,744,6.430790095462794,2016,1,100.0,True,Toutes les heures,True
+temperature_c,2016-02-01,696,696,696,6.704411622903433,2016,2,100.0,True,Toutes les heures,True
+temperature_c,2016-03-01,744,744,744,7.323879869975719,2016,3,100.0,True,Toutes les heures,True
+temperature_c,2016-04-01,720,720,720,10.385769337089211,2016,4,100.0,True,Toutes les heures,True
+temperature_c,2016-05-01,744,744,744,14.330755176203956,2016,5,100.0,True,Toutes les heures,True
+temperature_c,2016-06-01,720,720,720,17.8172062482173,2016,6,100.0,True,Toutes les heures,True
+temperature_c,2016-07-01,744,744,744,20.557504553550594,2016,7,100.0,True,Toutes les heures,True
+temperature_c,2016-08-01,744,744,744,20.814082885113503,2016,8,100.0,True,Toutes les heures,True
+temperature_c,2016-09-01,720,720,720,18.6976122431956,2016,9,100.0,True,Toutes les heures,True
+temperature_c,2016-10-01,744,744,744,11.848518008215613,2016,10,100.0,True,Toutes les heures,True
+temperature_c,2016-11-01,720,720,720,8.361587412342336,2016,11,100.0,True,Toutes les heures,True
+temperature_c,2016-12-01,744,744,744,5.134764869341504,2016,12,100.0,True,Toutes les heures,True
+temperature_c,2017-01-01,744,744,744,2.5265717330233692,2017,1,100.0,True,Toutes les heures,True
+temperature_c,2017-02-01,672,672,672,7.539407577220099,2017,2,100.0,True,Toutes les heures,True
+temperature_c,2017-03-01,744,744,744,10.297423330588675,2017,3,100.0,True,Toutes les heures,True
+temperature_c,2017-04-01,720,720,720,10.94417020294106,2017,4,100.0,True,Toutes les heures,True
+temperature_c,2017-05-01,744,744,744,15.94241257471217,2017,5,100.0,True,Toutes les heures,True
+temperature_c,2017-06-01,720,720,720,20.416450228148506,2017,6,100.0,True,Toutes les heures,True
+temperature_c,2017-07-01,744,744,744,20.82763816812206,2017,7,100.0,True,Toutes les heures,True
+temperature_c,2017-08-01,744,731,744,20.468634989565242,2017,8,98.25268817204301,True,Heures manquantes,True
+temperature_c,2017-09-01,720,717,720,15.393388104183105,2017,9,99.58333333333333,True,Heures manquantes,True
+temperature_c,2017-10-01,744,744,744,13.979925435227877,2017,10,100.0,True,Toutes les heures,True
+temperature_c,2017-11-01,720,707,720,7.704737693846628,2017,11,98.19444444444444,True,Heures manquantes,True
+temperature_c,2017-12-01,744,739,744,5.332816216564548,2017,12,99.32795698924731,True,Heures manquantes,True
+temperature_c,2018-01-01,744,744,744,7.844697289455377,2018,1,100.0,True,Toutes les heures,True
+temperature_c,2018-02-01,672,672,672,2.919123236757188,2018,2,100.0,True,Toutes les heures,True
+temperature_c,2018-03-01,744,744,744,7.325529173284177,2018,3,100.0,True,Toutes les heures,True
+temperature_c,2018-04-01,720,720,720,13.151948838719697,2018,4,100.0,True,Toutes les heures,True
+temperature_c,2018-05-01,744,744,744,15.498597376178045,2018,5,100.0,True,Toutes les heures,True
+temperature_c,2018-06-01,720,720,720,19.31187220308546,2018,6,100.0,True,Toutes les heures,True
+temperature_c,2018-07-01,744,733,744,22.574219399403898,2018,7,98.52150537634408,True,Heures manquantes,True
+temperature_c,2018-08-01,744,744,744,21.43362360615565,2018,8,100.0,True,Toutes les heures,True
+temperature_c,2018-09-01,720,720,720,18.1116040087707,2018,9,100.0,True,Toutes les heures,True
+temperature_c,2018-10-01,744,736,744,13.585115392955087,2018,10,98.9247311827957,True,Heures manquantes,True
+temperature_c,2018-11-01,720,720,720,8.845105057438413,2018,11,100.0,True,Toutes les heures,True
+temperature_c,2018-12-01,744,744,744,7.257991274684845,2018,12,100.0,True,Toutes les heures,True
+temperature_c,2019-01-01,744,744,744,4.066575204236518,2019,1,100.0,True,Toutes les heures,True
+temperature_c,2019-02-01,672,672,672,7.280331441135036,2019,2,100.0,True,Toutes les heures,True
+temperature_c,2019-03-01,744,744,744,9.496125033815613,2019,3,100.0,True,Toutes les heures,True
+temperature_c,2019-04-01,720,720,720,11.006523078926287,2019,4,100.0,True,Toutes les heures,True
+temperature_c,2019-05-01,744,744,744,13.359722550891929,2019,5,100.0,True,Toutes les heures,True
+temperature_c,2019-06-01,720,720,720,19.437757961456516,2019,6,100.0,True,Toutes les heures,True
+temperature_c,2019-07-01,744,736,744,22.314241547801352,2019,7,98.9247311827957,True,Heures manquantes,True
+temperature_c,2019-08-01,744,744,744,21.03646510447153,2019,8,100.0,True,Toutes les heures,True
+temperature_c,2019-09-01,720,720,720,17.629909562048063,2019,9,100.0,True,Toutes les heures,True
+temperature_c,2019-10-01,744,744,744,14.21420038329196,2019,10,100.0,True,Toutes les heures,True
+temperature_c,2019-11-01,720,720,720,8.073543275067808,2019,11,100.0,True,Toutes les heures,True
+temperature_c,2019-12-01,744,744,744,7.501141675017409,2019,12,100.0,True,Toutes les heures,True
+temperature_c,2020-01-01,744,744,744,6.584028423584898,2020,1,100.0,True,Toutes les heures,True
+temperature_c,2020-02-01,696,696,696,8.701919619742918,2020,2,100.0,True,Toutes les heures,True
+temperature_c,2020-03-01,744,744,744,8.722207486864768,2020,3,100.0,True,Toutes les heures,True
+temperature_c,2020-04-01,720,715,720,13.512895977896001,2020,4,99.30555555555556,True,Heures manquantes,True
+temperature_c,2020-05-01,744,744,744,16.264463206429546,2020,5,100.0,True,Toutes les heures,True
+temperature_c,2020-06-01,720,720,720,17.892488235259094,2020,6,100.0,True,Toutes les heures,True
+temperature_c,2020-07-01,744,744,744,21.070039684405216,2020,7,100.0,True,Toutes les heures,True
+temperature_c,2020-08-01,744,744,744,21.677016330847,2020,8,100.0,True,Toutes les heures,True
+temperature_c,2020-09-01,720,720,720,18.06519449806952,2020,9,100.0,True,Toutes les heures,True
+temperature_c,2020-10-01,744,744,744,12.231616525545627,2020,10,100.0,True,Toutes les heures,True
+temperature_c,2020-11-01,720,720,720,9.804433508263187,2020,11,100.0,True,Toutes les heures,True
+temperature_c,2020-12-01,744,739,744,6.512531216885942,2020,12,99.32795698924731,True,Heures manquantes,True
+temperature_c,2021-01-01,744,744,744,4.391674148226591,2021,1,100.0,True,Toutes les heures,True
+temperature_c,2021-02-01,672,672,672,7.667520617856775,2021,2,100.0,True,Toutes les heures,True
+temperature_c,2021-03-01,744,744,744,8.347120524902806,2021,3,100.0,True,Toutes les heures,True
+temperature_c,2021-04-01,720,720,720,9.884434972168574,2021,4,100.0,True,Toutes les heures,True
+temperature_c,2021-05-01,744,744,744,13.183795490563776,2021,5,100.0,True,Toutes les heures,True
+temperature_c,2021-06-01,720,720,720,19.497447472157052,2021,6,100.0,True,Toutes les heures,True
+temperature_c,2021-07-01,744,744,744,19.923315063782354,2021,7,100.0,True,Toutes les heures,True
+temperature_c,2021-08-01,744,744,744,19.229445929732954,2021,8,100.0,True,Toutes les heures,True
+temperature_c,2021-09-01,720,720,720,18.297248726054594,2021,9,100.0,True,Toutes les heures,True
+temperature_c,2021-10-01,744,744,744,12.63372541158533,2021,10,100.0,True,Toutes les heures,True
+temperature_c,2021-11-01,720,720,720,7.28911398530886,2021,11,100.0,True,Toutes les heures,True
+temperature_c,2021-12-01,744,734,744,6.5576868694307615,2021,12,98.65591397849462,True,Heures manquantes,True
+temperature_c,2022-01-01,744,744,744,4.457498145170131,2022,1,100.0,True,Toutes les heures,True
+temperature_c,2022-02-01,672,672,672,7.593395065984375,2022,2,100.0,True,Toutes les heures,True
+temperature_c,2022-03-01,744,744,744,9.298555242152277,2022,3,100.0,True,Toutes les heures,True
+temperature_c,2022-04-01,720,720,720,11.23600869619622,2022,4,100.0,True,Toutes les heures,True
+temperature_c,2022-05-01,744,744,744,17.15874812888928,2022,5,100.0,True,Toutes les heures,True
+temperature_c,2022-06-01,720,720,720,20.444002854044545,2022,6,100.0,True,Toutes les heures,True
+temperature_c,2022-07-01,744,744,744,22.81258555502509,2022,7,100.0,True,Toutes les heures,True
+temperature_c,2022-08-01,744,744,744,23.02520771449142,2022,8,100.0,True,Toutes les heures,True
+temperature_c,2022-09-01,720,720,720,17.2585736641754,2022,9,100.0,True,Toutes les heures,True
+temperature_c,2022-10-01,744,744,744,16.33564017646681,2022,10,100.0,True,Toutes les heures,True
+temperature_c,2022-11-01,720,720,720,10.131844198365055,2022,11,100.0,True,Toutes les heures,True
+temperature_c,2022-12-01,744,744,744,6.17662645940874,2022,12,100.0,True,Toutes les heures,True
+temperature_c,2023-01-01,744,744,744,5.751386896689338,2023,1,100.0,True,Toutes les heures,True
+temperature_c,2023-02-01,672,653,672,6.09954936231355,2023,2,97.17261904761905,True,Heures manquantes,True
+temperature_c,2023-03-01,744,744,744,9.544670318359858,2023,3,100.0,True,Toutes les heures,True
+temperature_c,2023-04-01,720,720,720,11.113671996401184,2023,4,100.0,True,Toutes les heures,True
+temperature_c,2023-05-01,744,744,744,15.356857140415038,2023,5,100.0,True,Toutes les heures,True
+temperature_c,2023-06-01,720,720,720,20.755727915765927,2023,6,100.0,True,Toutes les heures,True
+temperature_c,2023-07-01,744,718,744,21.202199933425174,2023,7,96.50537634408602,True,Heures manquantes,True
+temperature_c,2023-08-01,744,744,744,21.08152494864072,2023,8,100.0,True,Toutes les heures,True
+temperature_c,2023-09-01,720,720,720,20.119774599003787,2023,9,100.0,True,Toutes les heures,True
+temperature_c,2023-10-01,744,744,744,15.521937680768348,2023,10,100.0,True,Toutes les heures,True
+temperature_c,2023-11-01,720,720,720,9.428637506554196,2023,11,100.0,True,Toutes les heures,True
+temperature_c,2023-12-01,744,744,744,7.48759876235685,2023,12,100.0,True,Toutes les heures,True
+temperature_c,2024-01-01,744,744,744,5.595728205163712,2024,1,100.0,True,Toutes les heures,True
+temperature_c,2024-02-01,696,691,696,8.91350090206226,2024,2,99.2816091954023,True,Heures manquantes,True
+temperature_c,2024-03-01,744,744,744,9.918390582402703,2024,3,100.0,True,Toutes les heures,True
+temperature_c,2024-04-01,720,720,720,11.771841201320392,2024,4,100.0,True,Toutes les heures,True
+temperature_c,2024-05-01,744,744,744,14.777825607865951,2024,5,100.0,True,Toutes les heures,True
+temperature_c,2024-06-01,720,720,720,18.155677865365387,2024,6,100.0,True,Toutes les heures,True
+temperature_c,2024-07-01,744,744,744,21.01207253624595,2024,7,100.0,True,Toutes les heures,True
+temperature_c,2024-08-01,744,744,744,21.68333601848666,2024,8,100.0,True,Toutes les heures,True
+temperature_c,2024-09-01,720,720,720,16.255115556032248,2024,9,100.0,True,Toutes les heures,True
+temperature_c,2024-10-01,744,744,744,14.417635106304486,2024,10,100.0,True,Toutes les heures,True
+temperature_c,2024-11-01,720,720,720,9.469783950617307,2024,11,100.0,True,Toutes les heures,True
+temperature_c,2024-12-01,744,744,744,6.005661894505607,2024,12,100.0,True,Toutes les heures,True
+temperature_c,2025-01-01,744,744,744,5.36302747990606,2025,1,100.0,True,Toutes les heures,True
+temperature_c,2025-02-01,672,667,672,6.440522216747657,2025,2,99.25595238095238,True,Heures manquantes,True
+temperature_c,2025-03-01,744,744,744,8.990169443806801,2025,3,100.0,True,Toutes les heures,True
+temperature_c,2025-04-01,720,715,720,12.909461133461155,2025,4,99.30555555555556,True,Heures manquantes,True
+temperature_c,2025-05-01,744,744,744,15.688994579256697,2025,5,100.0,True,Toutes les heures,True
+temperature_c,2025-06-01,720,720,720,21.555868426535135,2025,6,100.0,True,Toutes les heures,True
+temperature_c,2025-07-01,744,744,744,21.16616666359553,2025,7,100.0,True,Toutes les heures,True
+temperature_c,2025-08-01,744,744,744,21.661679582238193,2025,8,100.0,True,Toutes les heures,True
+temperature_c,2025-09-01,720,720,720,16.564678597508276,2025,9,100.0,True,Toutes les heures,True
+temperature_c,2025-10-01,744,744,744,13.296697332124774,2025,10,100.0,True,Toutes les heures,True
+temperature_c,2025-11-01,720,720,720,9.159008484675173,2025,11,100.0,True,Toutes les heures,True
+temperature_c,2025-12-01,744,744,744,7.02434551486973,2025,12,100.0,True,Toutes les heures,True
+temperature_c,2026-01-01,744,744,744,5.191401650306243,2026,1,100.0,True,Toutes les heures,True
+temperature_c,2026-02-01,672,672,672,8.923809437626424,2026,2,100.0,True,Toutes les heures,True
+temperature_c,2026-03-01,744,744,744,9.425748401050843,2026,3,100.0,True,Toutes les heures,True
+temperature_c,2026-04-01,720,697,720,13.628674615381954,2026,4,96.80555555555556,True,Heures manquantes,True
+temperature_c,2026-05-01,744,744,744,16.833194104242516,2026,5,100.0,True,Toutes les heures,True
+temperature_c,2026-06-01,550,550,720,20.784687172887196,2026,6,76.38888888888889,False,Heures manquantes,False

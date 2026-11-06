@@ -80,7 +80,11 @@ Le script `06_selection_stations.R` sélectionne les stations présentant une co
 - `stations_selectionnees.csv` : liste des stations retenues.
 - `synop_stations_selectionnees.rds` : observations des stations retenues.
 
-## 07 — Moyennes du réseau toutes les trois heures
+## Ancienne étape supprimée - Moyennes du réseau toutes les trois heures
+
+Cette étape est conservée ici pour mémoire. L’ancien script de moyennes à trois heures et sa fonction auxiliaire
+ont été supprimés : leurs résultats ne sont pas utilisés par la reconstruction
+horaire du script 07. Les fichiers de données déjà produits sont conservés.
 
 Le script `07_moyennes_3h.R` calcule, à chaque échéance de trois heures, la moyenne des températures et des précipitations des stations disponibles, avec le même poids pour chaque station. Les températures sont converties de kelvins en degrés Celsius. Les traces de précipitations codées `−0,1` sont approximées à 0 mm et leur nombre est conservé. Pour chaque variable, le script fournit la moyenne, l’écart-type spatial, les quantiles à 2,5 % et 97,5 %, ainsi que le nombre et le pourcentage de stations disponibles. Les échéances entièrement absentes sont conservées avec une moyenne manquante ; celles ayant moins de 80 % des stations disponibles sont signalées.
 
@@ -91,9 +95,9 @@ Les quantiles décrivent la dispersion entre stations. Ils ne constituent pas un
 - `moyennes_reseau_3h.csv`
 - `moyennes_reseau_3h.rds`
 
-## 08 — Reconstruction des données horaires
+## 07 — Reconstruction des données horaires
 
-Le script `08_moyennes_horaires.R` repart des observations des stations sélectionnées et reconstruit les valeurs horaires station par station. La température est interpolée linéairement uniquement entre deux mesures valides espacées exactement de trois heures. Les interruptions plus longues ne sont pas comblées. Pour les précipitations, chaque cumul `rr3` est divisé par trois et réparti également entre les trois heures précédentes. Les valeurs sont datées en fin d’intervalle : une précipitation datée de 03 h correspond à l’intervalle 02–03 h. Le script vérifie la conservation des cumuls avant de limiter les résultats à la période étudiée.
+Le script `07_moyennes_horaires.R` repart des observations des stations sélectionnées et reconstruit les valeurs horaires station par station. La température est interpolée linéairement uniquement entre deux mesures valides espacées exactement de trois heures. Les interruptions plus longues ne sont pas comblées. Pour les précipitations, chaque cumul `rr3` est divisé par trois et réparti également entre les trois heures précédentes. Les valeurs sont datées en fin d’intervalle : une précipitation datée de 03 h correspond à l’intervalle 02–03 h. Le script vérifie la conservation des cumuls avant de limiter les résultats à la période étudiée.
 
 Les moyennes, écarts-types et quantiles spatiaux sont ensuite recalculés à partir des valeurs horaires des stations. Les résultats indiquent les nombres de valeurs observées et estimées. Le détail par station conserve également les dates des mesures sources et les indicateurs d’interpolation ou de traces de pluie. Cette reconstruction est rétrospective : certaines valeurs utilisent une observation ultérieure et ne sont donc pas directement utilisables comme informations disponibles en temps réel.
 
@@ -103,9 +107,9 @@ Les moyennes, écarts-types et quantiles spatiaux sont ensuite recalculés à pa
 - `moyennes_reseau_horaires.csv`
 - `moyennes_reseau_horaires.rds`
 
-## 09 — Graphiques mensuels par année
+## 08 — Graphiques mensuels par année
 
-Le script `09_graphiques_mensuels.R` agrège les moyennes horaires pour créer deux graphiques : la température moyenne mensuelle et le cumul mensuel disponible des précipitations. Les mois figurent en abscisse et chaque année possède une couleur, identique sur les deux graphiques. Le calcul utilise le calendrier UTC et tient compte des années bissextiles. Pour la pluie, l’observation de minuit le premier jour d’un mois est affectée au mois précédent, puisqu’elle représente l’heure écoulée.
+Le script `08_graphiques_mensuels.R` agrège les moyennes horaires pour créer deux graphiques : la température moyenne mensuelle et le cumul mensuel disponible des précipitations. Les mois figurent en abscisse et chaque année possède une couleur, identique sur les deux graphiques. Le calcul utilise le calendrier UTC et tient compte des années bissextiles. Pour la pluie, l’observation de minuit le premier jour d’un mois est affectée au mois précédent, puisqu’elle représente l’heure écoulée.
 
 Les mois coupés par les limites de la période et ceux disposant de moins de 95 % des heures attendues ne sont pas affichés. Un point creux signale les mois affichés qui contiennent néanmoins des heures manquantes : leur cumul de pluie reste partiel, sans correction ni extrapolation. Le tableau CSV conserve les valeurs calculées, les indicateurs de couverture et la décision d’affichage, y compris pour les mois exclus des graphiques.
 
@@ -117,15 +121,15 @@ Les mois coupés par les limites de la période et ceux disposant de moins de 95
 
 ## Exécution
 
-Pour reconstruire l’ensemble des résultats, exécuter les scripts 01 à 09 dans l’ordre. Le script 08 utilise directement la sortie du script 06 : il ne nécessite pas de relancer le script 07.
+Pour reconstruire les données horaires et les graphiques, exécuter les scripts 01 à 08 dans l’ordre. Le script 07 utilise directement la sortie du script 06 ; l’ancien script de moyennes à trois heures a été supprimé.
 
 Depuis la racine du projet :
 
-    source("data_temp/09_graphiques_mensuels.R", encoding = "UTF-8")
+    source("data_temp/08_graphiques_mensuels.R", encoding = "UTF-8")
 
 Depuis le dossier `data_temp` :
 
-    source("09_graphiques_mensuels.R", encoding = "UTF-8")
+    source("08_graphiques_mensuels.R", encoding = "UTF-8")
 
 Les dépendances R sont `data.table`, `R.utils` et `ggplot2`.
 ## Gestion des fuseaux horaires et des changements d'heure
