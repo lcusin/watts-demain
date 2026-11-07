@@ -1,5 +1,4 @@
 variable,mois_debut,nb_heures,nb_heures_valides,heures_attendues,valeur,annee,mois,couverture_horaire_pct,mois_entier,completude,affiche
-precipitation_1h_mm,2011-12-01,1,1,744,0.0895238095238095,2011,12,0.13440860215053763,False,Heures manquantes,False
 precipitation_1h_mm,2012-01-01,744,744,744,43.74242296918765,2012,1,100.0,True,Toutes les heures,True
 precipitation_1h_mm,2012-02-01,696,696,696,9.673655462184858,2012,2,100.0,True,Toutes les heures,True
 precipitation_1h_mm,2012-03-01,744,744,744,24.814780578898212,2012,3,100.0,True,Toutes les heures,True
@@ -173,7 +172,7 @@ precipitation_1h_mm,2026-02-01,672,672,672,113.12470827970826,2026,2,100.0,True,
 precipitation_1h_mm,2026-03-01,744,744,744,45.16910629116509,2026,3,100.0,True,Toutes les heures,True
 precipitation_1h_mm,2026-04-01,720,699,720,19.930835395835388,2026,4,97.08333333333333,True,Heures manquantes,True
 precipitation_1h_mm,2026-05-01,744,744,744,68.45101887601885,2026,5,100.0,True,Toutes les heures,True
-precipitation_1h_mm,2026-06-01,549,549,720,24.12120763620763,2026,6,76.25,False,Heures manquantes,False
+precipitation_1h_mm,2026-06-01,550,549,720,24.12120763620763,2026,6,76.25,False,Heures manquantes,False
 temperature_c,2012-01-01,744,744,744,5.834701293396169,2012,1,100.0,True,Toutes les heures,True
 temperature_c,2012-02-01,696,696,696,1.4756221657071273,2012,2,100.0,True,Toutes les heures,True
 temperature_c,2012-03-01,744,744,744,9.972178592763292,2012,3,100.0,True,Toutes les heures,True

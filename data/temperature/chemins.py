@@ -1,4 +1,7 @@
-"""Chemins et lectures/ecritures CSV communs aux scripts."""
+"""Chemins et lectures/ecritures CSV communs aux scripts.
+Les colonnes date_utc sont en UTC, meme si le CSV ne porte pas de suffixe.
+La conversion vers le calendrier local et la jointure RTE sont faites dans data/merge/merge.py.
+"""
 from pathlib import Path
 
 import pandas as pd

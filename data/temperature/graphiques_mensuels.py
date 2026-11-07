@@ -12,7 +12,7 @@ assert not x.empty and x.date_utc.notna().all() and not x.date_utc.duplicated().
 assert x.date_utc.diff().dropna().eq(pd.Timedelta(hours=1)).all()
 bilans = []
 for v in ["temperature_c", "precipitation_1h_mm"]:
-    dates = x.date_utc if v == "temperature_c" else x.date_utc - pd.Timedelta(hours=1)
+    dates = x.date_utc  # La pluie est deja datee en debut d'intervalle.
     valeurs = x[v + "_moyenne"]
     for mois, s in valeurs.groupby(dates.dt.strftime("%Y-%m-01")):
         debut = pd.Timestamp(mois)

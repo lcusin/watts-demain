@@ -215,9 +215,11 @@ def calculer_moyennes_horaires(x, stations):
         trace = z.rr3.eq(-0.1)
         cumul = z.rr3.mask(trace, 0)
         assert cumul.dropna().ge(0).all()
+        # Cumul observe a 12 h : intervalles 9-10, 10-11 et 11-12 h.
+        # La date horaire indique le debut de chaque intervalle.
         pluie = pd.concat([pd.DataFrame({"geo_id_wmo": identifiant,
             "date_utc": z.date_utc - pd.Timedelta(hours=h), "precipitation_1h_mm": cumul / 3,
-            "trace_pluie": trace, "source_pluie_fin_utc": z.date_utc}) for h in (0, 1, 2)], ignore_index=True)
+            "trace_pluie": trace, "source_pluie_fin_utc": z.date_utc}) for h in (1, 2, 3)], ignore_index=True)
         station = temperature.merge(pluie, on=CLE, how="outer", validate="one_to_one")
         horaires.append(station.loc[station.date_utc.between(DEBUT, fin)])
     horaire = pd.concat(horaires, ignore_index=True).sort_values(CLE)

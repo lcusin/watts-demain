@@ -19,7 +19,9 @@ Traitements :
 
 Important :
     Les horodatages représentent les créneaux publiés par RTE.
-    Ils ne sont pas interprétés automatiquement comme des instants UTC.
+    Ils correspondent a l'heure legale francaise (Europe/Paris).
+    La conversion UTC est centralisee dans data/merge/merge.py ; les journees
+    de changement d'heure sont signalees et exclues des analyses horaires.
 """
 
 from pathlib import Path

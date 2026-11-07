@@ -1,3 +1,6 @@
+"""Calendrier civil francais : etiquettes locales, pas des instants UTC.
+La conversion des heures RTE est centralisee dans data/merge/merge.py.
+"""
 import pandas as pd
 from pathlib import Path
 

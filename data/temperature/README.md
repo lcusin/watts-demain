@@ -48,3 +48,7 @@ ils peuvent donc correspondre a une execution anterieure.
 Les regles de selection (> 95 % pour temperature ET pluie), de nettoyage et
 les calculs horaires restent les memes. La reconstruction horaire est
 retrospective : une valeur interpolee peut utiliser une mesure ulterieure.
+
+## Convention horaire
+
+`date_utc` désigne l'instant de la température et le début de l'intervalle de pluie : à 10 h, la pluie couvre 10–11 h. Un cumul SYNOP enregistré à 12 h est divisé par trois et affecté aux heures 9 h, 10 h et 11 h. La date de la mesure source reste 12 h dans les diagnostics. Ni le merge ni les graphiques mensuels ne décalent à nouveau la pluie. La dernière heure de la grille reste sans pluie si aucune mesure ne couvre l'intervalle suivant.
