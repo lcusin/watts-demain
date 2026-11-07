@@ -1,0 +1,7 @@
+{
+  "n_total": 105192,
+  "n_utilisable": 104477,
+  "n_heures_changement": 576,
+  "n_autres_heures_meteo_manquante": 139,
+  "controles": "UTC, agregation conso, temperature, pluie, calendrier et huit references RTE conformes"
+}

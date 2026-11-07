@@ -1,40 +1,174 @@
+% !TeX root = main.tex
 \section{Résultats}
-\noindent
+\label{sec:resultats}
 
-\subsection{Comparaison des modèles et apport des variables}
-\noindent
+\subsection{Données préparées et analyse descriptive}
+\label{sec:donnees-preparees}
 
-\begin{figure}[ht]
+La base de consommation couvre 2012--2025. Sur l'apprentissage 2012--2023, la grille comprend 105\,192 étiquettes horaires, sans doublon ni consommation manquante. Cette régularité des étiquettes ne résout pas les ambiguïtés physiques des changements d'heure, exclus des modèles météo et de prévision selon le protocole décrit dans la méthode.
+
+Après exclusion des 576 heures correspondant aux 24 journées de changement d'heure du train et de 139 autres heures sans météo complète, 104\,477 heures sont utilisables pour la régression descriptive.
+
+La sélection météorologique retient 37 stations présentant chacune plus de 95\,\% de données de température et de précipitations. Environ 45,1\,\% de la surface métropolitaine se situe à moins de 50~km d'une station et 97,3\,\% à moins de 100~km ; la distance médiane surfacique est de 53,0~km (figure~\ref{fig:stations}). Les proportions à 50 et 100~km varient de moins de 0,01 point de pourcentage entre les deux maillages les plus fins. Ces estimations dépendent du contour simplifié et des positions de référence : la proximité géographique ne garantit ni la représentativité climatique ni une pondération adaptée à la population.
+
+\begin{figure}[!htbp]
     \centering
-% Image absente du template : \includegraphics[width=0.6\textwidth]{charts/linechart.png}
-    \caption{Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.}
-    \label{fig:justalinechart}
+    \includegraphics[width=.46\linewidth]{../analyse_consommation/resultats/09_couverture_geographique/couverture_geographique.png}
+    \caption{Répartition des 37 stations SYNOP et distance à la station la plus proche. Le seuil de sélection de 95\,\% concerne la disponibilité temporelle de chaque variable, et non la surface couverte. Fond : Natural Earth ; stations : Météo-France.}
+    \label{fig:stations}
 \end{figure}
 
-\subsection{Performances selon les périodes et les heures}
-\noindent
+Les profils de la figure~\ref{fig:profils-conso} montrent une consommation plus faible la nuit et le week-end, et plus élevée en hiver. La moyenne mobile annuelle passe de 55\,389 à 49\,723~MW entre juillet 2012 et juillet 2023, les premiers et derniers points estimables, soit une baisse de 10,2\,\%. Cette évolution n'est ni régulière ni corrigée du climat ; retirer cette tendance laisse subsister les fluctuations saisonnières (figure~\ref{fig:tendance}).
 
-\begin{figure}[H]
-    \begin{subfigure}[b]{0.5\textwidth}
-        \centering
-% Image absente du template : \includegraphics[width=8cm]{charts/linechart.png}
-        \subcaption{Lorem Ipsum - Dolor Sit}
-    \end{subfigure}
-    \begin{subfigure}[b]{0.5\textwidth}
-        \centering
-% Image absente du template : \includegraphics[width=8cm]{charts/linechart.png}
-        \subcaption{Lorem Isup - Dolor Sit}
-    \end{subfigure}
-    \begin{subfigure}[b]{0.5\textwidth}
-        \centering
-% Image absente du template : \includegraphics[width=8cm]{charts/linechart.png}
-        \subcaption{Lorem Ipsum - Dolor Sit}
-    \end{subfigure}
-    \begin{subfigure}[b]{0.5\textwidth}
-        \centering
-% Image absente du template : \includegraphics[width=8cm]{charts/linechart.png}
-        \subcaption{Lorem Ipsum - Dolor Sit}
-    \end{subfigure}
-    \caption{Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.}
-    \label{fig:justfourlinecharts}
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=\linewidth]{../analyse_consommation/resultats/01_classique/graphiques/02_profils_saisonniers.png}
+    \caption{Visualisation de la consommation d'apprentissage : profils horaires selon le type de jour, moyennes par jour de semaine et profils mensuels par année. Les effets météo et calendaires ne sont pas corrigés.}
+    \label{fig:profils-conso}
 \end{figure}
+
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=.65\linewidth]{../analyse_consommation/resultats/02_tendance/tendance_long_terme.png}
+    \caption{Consommation moyenne quotidienne et moyenne mobile centrée sur 365 jours (haut), puis écarts à cette tendance (bas). Les 182 jours de chaque bord restent sans estimation. La saisonnalité est conservée dans les écarts.}
+    \label{fig:tendance}
+\end{figure}
+
+\subsection{Comparaison des décompositions}
+
+Les décompositions additives moyennes donnent les plus faibles RMSE descriptives aux échelles journalière et hebdomadaire (2\,130 et 2\,360~MW) ; le multiplicatif moyen est meilleur sur les moyennes mensuelles (2\,067~MW). Ces erreurs d'ajustement ne sont ni des scores prédictifs ni comparables entre échelles. La différence à 364 jours fonctionne mieux à heure identique qu'avec un décalage de $\pm1$~h.
+
+STL standard réduit davantage l'erreur d'ajustement : sa RMSE vaut 1\,209~MW à l'échelle journalière et 1\,505~MW à l'échelle hebdomadaire, contre 2\,999 et 2\,893~MW pour STL robuste. Cela ne suffit pas à choisir un modèle prédictif : le lissage utilise les observations des deux côtés de chaque date. La variante robuste peut moins bien ajuster les valeurs inhabituelles puisqu'elle réduit leur poids.
+
+Aucune transformation ne produit clairement un bruit blanc. Parmi les 36 variantes horaires, STL hebdomadaire robuste suivi d'une différence à 1~h minimise l'ACF quadratique moyenne, mais conserve une ACF de 0,638 à 168~h. Les différences successives à 364 jours, 24~h et 1~h conservent une ACF de 0,657 à 1~h. Le choix prédictif doit donc reposer sur une validation temporelle.
+
+\subsection{Modèles du cours : AR, MA et ARMA}
+
+Les quatre modèles AR, MA et ARMA et les trois benchmarks sont évalués sur 1\,053 journées internes (25\,272 heures) et 352 journées en validation 2024 (8\,448 heures). Les seize ajustements convergent. AR(2) minimise les critères AIC et BIC dans chaque fenêtre annuelle et donne la meilleure RMSE interne parmi les quatre ARMA. AR(2) est retenu dans cette famille sur la base de la RMSE interne. Sur ces mêmes dates, sa RMSE est de 8\,022~MW, contre 5\,388~MW pour la semaine précédente, 5\,979~MW pour la moyenne des quatre semaines et 7\,585~MW pour la persistance.
+
+Le tableau~\ref{tab:aic-bic} présente les critères recalculés avec les formules de la méthode. Les valeurs minimales sont en gras au sein de chaque fenêtre. AR(2) est préféré par les deux critères dans les quatre ajustements annuels. Par exemple, pour prévoir 2024, il donne $\widehat\ell=-12\,800{,}75$, $k=3$ et $n=17\,324$, soit AIC $=25\,607{,}5$ et BIC $=25\,630{,}8$. Ces critères portent sur l'apprentissage avant 2024, pas sur les observations de validation. Leur classement ne garantit pas une meilleure prévision que les benchmarks.
+
+\begin{table}[!htbp]
+\centering
+\fontsize{10}{12}\selectfont
+\caption{Critères d'information sur la même série doublement différenciée, exprimée en GW. Chaque année désigne l'année prévue ; les critères utilisent la fenêtre d'apprentissage antérieure de deux ans. Comparaison uniquement à l'intérieur d'une année.}
+\label{tab:aic-bic}
+\input{../analyse_consommation/resultats/10_modeles_cours/tableau_aic_bic.tex}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\fontsize{10}{12}\selectfont
+\caption{Erreurs en MW, sur des dates communes à l'intérieur de chaque période. Coupure à $J$, 8~h pour une prévision produite à 14~h. Le tableau est généré depuis les sorties du script.}
+\label{tab:modeles-cours}
+\input{../analyse_consommation/resultats/10_modeles_cours/tableau_scores.tex}
+\end{table}
+
+En 2024, le benchmark de la semaine précédente atteint une RMSE de 4\,860~MW, contre 8\,210~MW pour AR(2). La moyenne de quatre semaines atteint 5\,362~MW. Les RMSE des quatre modèles AR, MA et ARMA sont comprises entre 8\,210 et 11\,861~MW, toutes supérieures à celle de la semaine précédente sur ce support.
+
+Les innovations d'AR(2) restent structurées (figure~\ref{fig:innovations-cours}). Sur le bloc analysé pour l'ajustement précédant 2024, le test de Ljung--Box rejette l'absence d'autocorrélation aux retards 24 et 168 ($p<0{,}001$). Les ACF/PACF présentent encore des pics aux retards saisonniers. Ce diagnostic porte sur les innovations à un pas ; le tableau~\ref{tab:modeles-cours} porte sur les erreurs des 24 heures du lendemain.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=\linewidth]{../analyse_consommation/resultats/10_modeles_cours/acf_pacf_retenu.png}
+\caption{Innovations à un pas d'AR(2) sur la série différenciée, pour l'ajustement précédant 2024. Le diagnostic utilise un bloc continu de 5\,159 heures en 2022 ; ce ne sont pas les erreurs de prévision J+1.}
+\label{fig:innovations-cours}
+\end{figure}
+
+\subsection{Modèles d’apprentissage supervisé (ML)}
+
+\subsubsection{Régression M09 : variables et ablations}
+
+Sur 26\,076 heures communes de 2021--2023, M09 obtient la plus faible RMSE parmi les 18 variantes : 2\,955~MW, pour une MAE de 2\,269~MW et un biais de $-767$~MW. Avec la convention observation moins prévision, ce biais indique une surestimation moyenne. Le tableau~\ref{tab:regression-m09} distingue l'enrichissement progressif et les ablations du modèle retenu. La RMSE passe de 4\,180~MW avec température linéaire à 3\,274~MW avec les seuils chaud/froid. Retirer la pluie ou les vacances de M09 augmente légèrement la RMSE, mais diminue légèrement la MAE. La variante à tendance plus flexible obtient une RMSE de 3\,304~MW.
+
+\begin{table}[!htbp]
+\centering
+\fontsize{10}{12}\selectfont
+\caption{Régressions avec météo observée, sur les mêmes 26\,076 heures internes. Chaque ablation réestime les coefficients après retrait du groupe.}
+\label{tab:regression-m09}
+\begin{tabular}{lrr}
+\toprule
+Méthode & MAE (MW) & RMSE (MW) \\
+\midrule
+Calendrier sans météo (M03) & 3641 & 4882 \\
+Température linéaire (M04) & 3252 & 4180 \\
+Température par seuils (M05) & 2545 & 3274 \\
+Température par morceaux et pluie (M08) & 2369 & 3053 \\
+M09 : interactions horaires & 2269 & 2955 \\
+M09 sans température & 3610 & 4857 \\
+M09 sans jours fériés & 2349 & 3075 \\
+M09 sans vacances & 2257 & 2993 \\
+M09 sans pluie & 2267 & 2962 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+La relation ajustée à la température dépend de l'heure (figure~\ref{fig:meteo-m09}). Dans le réajustement descriptif sur 2012--2023, la pente de base entre 5 et 10~$^{\circ}$C vaut environ $-1\,457$~MW par degré entre 0 et 5~h ; elle atteint $-1\,820$~MW par degré entre 12 et 17~h avec l'interaction froid. Ce sont des associations à contexte fixé, et non des effets causaux ni des performances de prévision. De même, les coefficients associés aux vacances A, B et C valent respectivement environ $-342$, $-675$ et $-594$~MW ; leur interprétation dépend du chevauchement des calendriers et des autres variables.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=\linewidth]{../analyse_consommation/resultats/06_meteo_calendrier/effets_meteo.png}
+\caption{Contributions météo relatives de M09 réajusté sur 2012--2023, à contexte fixé. Les courbes sont recentrées pour comparer leur forme. La pluie a un coefficient positif conditionnel, mais son ablation montre un faible gain prédictif.}
+\label{fig:meteo-m09}
+\end{figure}
+
+\subsubsection{Résidus et correction autorégressive}
+
+Les erreurs internes de M09 restent fortement autocorrélées : ACF de 0,946 à 1~h, 0,804 à 24~h et 0,504 à 168~h. Sur les 991 journées communes de l'essai J+1 à météo parfaite, la correction AR courte ramène la RMSE de 2\,877 à 2\,562~MW ; les retards journaliers et hebdomadaires la ramènent à 1\,751~MW, soit un gain de 39,1\,\% par rapport à M09 seul (tableau~\ref{tab:regression-ar}). Le gain est observé dans chacune des trois années.
+
+\begin{table}[!htbp]
+\centering
+\fontsize{10}{12}\selectfont
+\caption{Prévision J+1 sur 991 jours communs de 2021--2023. Consommation disponible à $J$, 12~h, et météo parfaite pour les régressions.}
+\label{tab:regression-ar}
+\begin{tabular}{lrr}
+\toprule
+Méthode & MAE (MW) & RMSE (MW) \\
+\midrule
+Persistance consommation & 6687 & 8048 \\
+Semaine précédente & 3520 & 5336 \\
+Moyenne des quatre semaines & 4249 & 5968 \\
+M09 seul & 2193 & 2877 \\
+M09 + AR court & 1938 & 2562 \\
+M09 + AR journalier/hebdomadaire & 1200 & 1751 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Avec la correction saisonnière, l'erreur absolue moyenne d'énergie quotidienne passe de 46\,893 à 23\,665~MWh, celle de la valeur de pointe de 1\,975 à 1\,048~MW et celle de son heure de 2,46 à 1,63~h. Les innovations à un pas restent toutefois corrélées, notamment à 168~h (ACF de 0,220). Ces scores ne sont pas ceux du tableau~\ref{tab:regression-m09} : les exclusions et la date de fin d'estimation diffèrent.
+
+\subsubsection{Validation 2024 selon le scénario météo}
+
+Sur 333 journées communes (7\,992 heures), la régression sans météo avec correction AR obtient une RMSE de 2\,546~MW, contre 4\,932~MW pour la semaine précédente, soit un gain de 48,4\,\%. Répéter la météo de 48~h auparavant dégrade la RMSE à 3\,350~MW. Avec la météo réellement observée du lendemain, M09 atteint 2\,020~MW : ce scénario utilise les observations futures et constitue une comparaison à météo parfaite.
+
+\begin{table}[!htbp]
+\centering
+\fontsize{10}{12}\selectfont
+\caption{Validation 2024 sur les mêmes 333 journées, coupure à $J$, 8~h. Les régressions incluent la correction AR saisonnière. Biais : observation moins prévision.}
+\label{tab:validation-m09}
+\begin{tabular}{lrrr}
+\toprule
+Méthode & MAE (MW) & RMSE (MW) & Biais (MW) \\
+\midrule
+Persistance consommation & 5661 & 7055 & -671 \\
+Semaine précédente & 3251 & 4932 & 246 \\
+Moyenne des quatre semaines & 3584 & 5296 & 505 \\
+Régression sans météo + AR & 1784 & 2546 & 14 \\
+M09, météo répétée à 48~h + AR & 2307 & 3350 & 7 \\
+M09, météo parfaite + AR & 1444 & 2020 & -99 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Le scénario météo répétée présente un biais global de 7~MW, avec des erreurs quotidiennes de signes opposés. Les 22 janvier et 25 novembre 2024, la température observée dépasse la référence de 48~h de 8,9 et 7,2~$^{\circ}$C en moyenne ; la consommation est fortement surestimée. Le 20 janvier, l'écart est de $-6,7$~$^{\circ}$C et la consommation est sous-estimée. La figure~\ref{fig:echecs-meteo} montre ces écarts. Les RMSE quotidiennes sont respectivement de 14\,868, 14\,380 et 10\,991~MW. Les écarts de température et les erreurs de consommation sont relevés sur les mêmes journées ; cette comparaison descriptive n'isole pas une relation causale.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=.86\linewidth]{../analyse_consommation/resultats/08_validation_2024/trois_echecs.png}
+\caption{Trois plus fortes erreurs du scénario à météo répétée à 48~h. La consommation est surestimée les 22 janvier et 25 novembre, et sous-estimée le 20 janvier. Les prévisions sont comparées aux observations sur les mêmes 24 heures locales.}
+\label{fig:echecs-meteo}
+\end{figure}
+
+Ces résultats correspondent à 333 journées communes, contre 352 pour la comparaison AR, MA et ARMA précédente. Les modèles ne sont donc pas classés ensemble à partir de ces tableaux : les dates et les historiques requis diffèrent. Le test final 2025 n'a pas été évalué.
+
+% Ajouter ici les résultats des autres modèles de ML.

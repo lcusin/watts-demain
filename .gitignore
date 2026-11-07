@@ -10,3 +10,6 @@ Thumbs.db
 /Archives/
 
 # Les donnees brutes, preparees et les resultats sont versionnes.
+
+# Fichiers techniques de compilation LaTeX.
+/rapport/build/

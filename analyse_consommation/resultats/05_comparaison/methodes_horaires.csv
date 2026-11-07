@@ -1,0 +1,37 @@
+methode,famille,definition
+brute,base,brute
+sans_tendance_365j,base,sans_tendance_365j
+brute_D8736,differences,"Base brute ; differences (8736,) heures"
+brute_D24,differences,"Base brute ; differences (24,) heures"
+brute_D1,differences,"Base brute ; differences (1,) heures"
+brute_D8736_D24,differences,"Base brute ; differences (8736, 24) heures"
+brute_D8736_D1,differences,"Base brute ; differences (8736, 1) heures"
+brute_D24_D1,differences,"Base brute ; differences (24, 1) heures"
+brute_D8736_D24_D1,differences,"Base brute ; differences (8736, 24, 1) heures"
+sans_tendance_365j_D8736,differences,"Base sans_tendance_365j ; differences (8736,) heures"
+sans_tendance_365j_D24,differences,"Base sans_tendance_365j ; differences (24,) heures"
+sans_tendance_365j_D1,differences,"Base sans_tendance_365j ; differences (1,) heures"
+sans_tendance_365j_D8736_D24,differences,"Base sans_tendance_365j ; differences (8736, 24) heures"
+sans_tendance_365j_D8736_D1,differences,"Base sans_tendance_365j ; differences (8736, 1) heures"
+sans_tendance_365j_D24_D1,differences,"Base sans_tendance_365j ; differences (24, 1) heures"
+sans_tendance_365j_D8736_D24_D1,differences,"Base sans_tendance_365j ; differences (8736, 24, 1) heures"
+classique_journalier_additive_mean,classique,Residu natif
+classique_journalier_additive_median,classique,Residu natif
+classique_journalier_multiplicative_mean,classique,Residu natif
+classique_journalier_multiplicative_median,classique,Residu natif
+STL_journalier_standard,STL,Residu STL
+STL_journalier_standard_D1,STL,Difference 1 h du residu STL
+MM365j_saison_STL_journalier_standard,combinaison,Consommation - MM365j - saisonnalite STL (tendance STL non retiree)
+STL_journalier_robuste,STL,Residu STL
+STL_journalier_robuste_D1,STL,Difference 1 h du residu STL
+MM365j_saison_STL_journalier_robuste,combinaison,Consommation - MM365j - saisonnalite STL (tendance STL non retiree)
+classique_hebdomadaire_additive_mean,classique,Residu natif
+classique_hebdomadaire_additive_median,classique,Residu natif
+classique_hebdomadaire_multiplicative_mean,classique,Residu natif
+classique_hebdomadaire_multiplicative_median,classique,Residu natif
+STL_hebdomadaire_standard,STL,Residu STL
+STL_hebdomadaire_standard_D1,STL,Difference 1 h du residu STL
+MM365j_saison_STL_hebdomadaire_standard,combinaison,Consommation - MM365j - saisonnalite STL (tendance STL non retiree)
+STL_hebdomadaire_robuste,STL,Residu STL
+STL_hebdomadaire_robuste_D1,STL,Difference 1 h du residu STL
+MM365j_saison_STL_hebdomadaire_robuste,combinaison,Consommation - MM365j - saisonnalite STL (tendance STL non retiree)

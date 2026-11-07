@@ -1,0 +1,40 @@
+{
+  "lignes_donnees": {
+    "train": 105192,
+    "validation": 8784,
+    "test": 8760
+  },
+  "estimateur": "Extensions : moindres carres ; modeles du cours : maximum de vraisemblance gaussienne",
+  "06_meteo_calendrier_ajustements_identifiables": 72,
+  "07_prevision_ar_ajustements_identifiables": 9,
+  "08_validation_2024_ajustements_identifiables": 4,
+  "modeles_cours": {
+    "choix_sur_2021_2023": "AR2",
+    "test_2025_sha256": "9a2969243c3c7b43fbbd4cc2e2e4055e9c1070f99008b8cfe2b7b742f9f0b921",
+    "inversion_verifiee": true,
+    "filtrage_causal_verifie_16_ajustements": true,
+    "jours_internes": 1053,
+    "jours_2024": 352
+  },
+  "07_prevision_ar_benchmarks": {
+    "jours_communs": 991,
+    "definitions_et_scores": "verifies depuis les observations"
+  },
+  "08_validation_2024_benchmarks": {
+    "jours_communs": 333,
+    "definitions_et_scores": "verifies depuis les observations"
+  },
+  "test_2025": "Donnees realignees, aucune evaluation ; empreinte stable pendant la validation.",
+  "versions": {
+    "numpy": "1.26.4",
+    "pandas": "2.1.4",
+    "matplotlib": "3.7.3",
+    "scipy": "1.11.4",
+    "scikit-learn": "1.2.2",
+    "statsmodels": "0.14.0",
+    "threadpoolctl": "2.2.0"
+  },
+  "python": "3.11.7",
+  "doublons_exacts": [],
+  "liens_documentation": "valides ; aucune reference obsolete hors journal de nettoyage"
+}

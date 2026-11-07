@@ -46,7 +46,7 @@
     filecolor=black,      
     urlcolor=personalizedColor,
     citecolor=personalizedColor,
-    pdftitle={Titre du PDF},
+    pdftitle={Prévision de la consommation électrique en France},
     pdfpagemode=FullScreen,
     }
 \urlstyle{same}
@@ -56,17 +56,24 @@
 % Configuration des légendes
 \captionsetup{width=13.5cm}
 
+% Eviter les pages presque vides reservees aux figures.
+\renewcommand{\topfraction}{0.9}
+\renewcommand{\bottomfraction}{0.9}
+\renewcommand{\textfraction}{0.08}
+\renewcommand{\floatpagefraction}{0.8}
 \begin{document}
 
+\hypersetup{pageanchor=false}
 \include{couverture}
 
-\setstretch{1.5}
+\setstretch{1.2}
 
 \pagenumbering{gobble}
 
 \tableofcontents
 \newpage
 
+\hypersetup{pageanchor=true}
 \input{introduction.tex}
 
 \input{methode.tex}

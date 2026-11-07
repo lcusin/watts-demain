@@ -1,0 +1,29 @@
+{
+    "latex-workshop.latex.tools": [
+        {
+            "name": "texlive",
+            "command": "powershell.exe",
+            "args": [
+                "-NoProfile",
+                "-ExecutionPolicy",
+                "Bypass",
+                "-File",
+                "%WORKSPACE_FOLDER%/.vscode/compiler_rapport.ps1",
+                "-Document",
+                "%DOC%",
+                "-Sortie",
+                "%OUTDIR%"
+            ]
+        }
+    ],
+    "latex-workshop.latex.recipes": [
+        {
+            "name": "TeX Live (latexmk)",
+            "tools": [
+                "texlive"
+            ]
+        }
+    ],
+    "latex-workshop.latex.recipe.default": "first",
+    "latex-workshop.latex.outDir": "%DIR%/build"
+}

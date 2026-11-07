@@ -1,84 +1,183 @@
+% !TeX root = main.tex
 \section{Méthodes}
-\noindent
+\label{sec:methodes}
 
-\subsection{Récupération et préparations des données}
-\noindent
+\subsection{Données et préparation horaire}
 
-\subsubsection{Sources et périmètre}
+L'objectif est de prévoir, à 14~h le jour $J$ en heure française, les 24 puissances moyennes horaires de $J+1$. Les données de consommation étudiées couvrent 2012--2025. Elles sont associées aux observations SYNOP et aux indicateurs de calendrier présentés dans le tableau~\ref{tab:donnees}. La consommation est une puissance en MW, et non une énergie en MWh.
 
-
-\begin{table}[H]
+\begin{table}[htbp]
     \centering
     \fontsize{10}{12}\selectfont
-    \renewcommand{\arraystretch}{1.3}
-    \caption{Source des données utilisées pour l'analyse et la modélisation.}
-    \begin{tabularx}{\linewidth}{p{2.5cm} X X X X X}
+    \renewcommand{\arraystretch}{1.2}
+    \caption{Données utilisées et transformations principales.}
+    \label{tab:donnees}
+    \begin{tabularx}{\linewidth}{p{2.5cm} p{2.5cm} X}
         \toprule
-        Données & Source & Période \newline disponible & Granularité initiale & Variables \newline retenues & Unités \\
+        Données & Pas initial & Préparation \\
         \midrule
-        Consommation \newline électrique & \cite{rte_eco2mix_2026} & Depuis 2012 & 30 minutes & Consommation & MWh \\
-        Météo & \cite{meteo_france_synop_2026} & Depuis 1996 & 3 heures & Température, précipitations & ° K, mm \\
-        Calendrier & N/A & N/A & 1 jour & Date, jours \newline fériés et \newline vacances & N/A \\
+        Consommation RTE & 30 minutes & Moyenne des puissances à :00 et :30, en MW, datée en début d'heure. \\
+        Météo SYNOP & 3 heures & Température en $^{\circ}$C et précipitations en mm, reconstruites au pas horaire. \\
+        Calendrier & 1 jour & Heure, jour de semaine, jours fériés et vacances scolaires par zone. \\
         \bottomrule
     \end{tabularx}
-    
-    \label{tab:scenarios}
 \end{table}
 
-\subsubsection{Construction du tableau horaire}
+Les sources sont éCO2mix, SYNOP et les référentiels des jours fériés et des vacances par zone \parencite{rte_eco2mix_2026,meteo_france_synop_2026,gouvernement2026joursferies,augusti2026vacances}. Les doublons SYNOP exacts sont supprimés ; les valeurs contradictoires pour une même station et un même instant deviennent manquantes. Les stations métropolitaines doivent présenter une couverture strictement supérieure à 95\,\% pour chacune des deux variables. La température est interpolée linéairement entre observations valides séparées de trois heures ; le cumul de pluie est réparti sur les trois heures précédentes. La moyenne des stations disponibles utilise des poids égaux. Leur écart-type spatial n'est pas un intervalle de confiance national.
 
-- Consommation : nettoyage, agrégation des demi-heures et convention retenue pour dater la moyenne. \newline
-- Météo : stations métropolitaines retenues, seuil de couverture de la température et des précipitations, moyenne spatiale à poids égaux, conversion des unités et reconstruction horaire. \newline
-- Préciser que l'écart-type météo mesure la dispersion entre stations, pas l'incertitude de la moyenne nationale.\newline
-- Calendrier : jour, heure, week-end, jours fériés et vacances par zone ; justification des variables retenues.\newline
-- Jointure temporelle, vérification du fuseau RTE, traitement des doublons, valeurs manquantes et observations atypiques.\newline
-- Changements d'heure : expliquer la convention permettant de traiter la demande de 24 cibles malgré les journées françaises de 23 ou 25 heures ; documenter toute exclusion.
+Les consommations proviennent des fichiers annuels téléchargés directement sur le site éCO2mix. Les dates sont en heure française, conservée pour les jours fériés, les vacances et les profils horaires. Nous ajoutons une date UTC pour joindre la météo. Les réponses de l'API RTE servent seulement de vérification externe. La température utilisée est celle du début de l'heure, $T_h$. La pluie sur $[h,h+1]$ est déjà datée à $h$ dans l'extraction : aucun décalage supplémentaire n'est appliqué dans la fusion.
 
-\subsubsection{Analyse exploratoire}
+Les fichiers RTE conservent 24 étiquettes horaires lors des changements d'heure. Pour les prévisions, nous masquons donc la consommation des deux journées de transition annuelles. Les lignes restent présentes pour conserver les décalages horaires ; les valeurs manquantes ne sont pas remplies. Si la cible ou l'historique nécessaire est incomplet, la journée est exclue pour toutes les méthodes de la comparaison. Les données brutes restent intactes.
 
-Explorer les données d'apprentissage pour orienter les modèles sans utiliser le test final pour choisir les variables.
+La couverture géographique est estimée sur le contour Natural Earth, Corse incluse, par la distance sphérique à la station la plus proche. Une grille de $0{,}005^{\circ}$ est pondérée par l'aire des cellules et comparée aux maillages $0{,}01^{\circ}$ et $0{,}02^{\circ}$. Les seuils de 50 et 100~km décrivent la proximité, sans garantir la représentativité climatique.
 
-- Cycles journalier et hebdomadaire, saisonnalité annuelle. \newline
-- Relation température–consommation et effets calendaires.\newline
-- Tendances, ruptures de régime et observations atypiques, sans suppression automatique des événements réels.
+\subsection{Exploration et décomposition}
 
-Figures proposées : profils horaires et saisonniers ; relation température–consommation ou de série longue montrant les ruptures. 
+L'exploration porte uniquement sur 2012--2023. Nous représentons l'évolution de la consommation et ses profils horaires, hebdomadaires et mensuels. Les décompositions classiques sont
+\[
+C_t=m_t+s_t+r_t\quad\hbox{(additive)},\qquad
+C_t=m_t\,s_t\,r_t\quad\hbox{(multiplicative)}.
+\]
+La composante $m_t$ représente la tendance et les variations lentes, $s_t$ la saisonnalité, et $r_t$ la composante irrégulière. Cette dernière n'est pas nécessairement un bruit blanc. L'amplitude saisonnière est exprimée en MW dans le modèle additif, et proportionnelle au niveau dans le modèle multiplicatif.
+
+Pour la tendance longue, nous calculons la consommation quotidienne moyenne $\overline C_d$, puis une moyenne mobile centrée :
+\[
+\widehat m_d=\frac{1}{365}\sum_{j=-182}^{182}\overline C_{d+j}.
+\]
+Les 182 jours de chaque bord restent sans estimation. Pour une période paire $p$, la décomposition classique utilise une moyenne mobile centrée $2\times p$, avec demi-poids aux extrémités. Nous regroupons ensuite les écarts par position saisonnière (heure, heure de semaine ou mois). Dans le cas additif,
+\[
+q_j=\mathop{\rm moyenne}_{t:\,t\bmod p=j}(C_t-\widehat m_t),\qquad
+\widehat s_j=q_j-\frac{1}{p}\sum_{i=0}^{p-1}q_i.
+\]
+La médiane est aussi testée à la place de la moyenne. Les coefficients sont centrés à zéro, puis soustraits à la série sans tendance. Dans le cas multiplicatif, les rapports remplacent les écarts et les coefficients sont normalisés pour avoir une moyenne égale à un.
+
+Nous comparons ces méthodes à STL standard et robuste, qui estiment tendance et saisonnalité par lissage LOESS. Les périodes 24~h, 168~h et 12 mois sont étudiées séparément ; la dernière utilise les moyennes mensuelles. La variante robuste réduit le poids des observations éloignées de l'ajustement.
+
+Nous testons aussi $C_t-C_{t-8736}$ : 364 jours correspondent à 52 semaines et conservent le jour de semaine. Les références à $8736\pm1$ heures vérifient l'alignement horaire. Des différences à 24~h et 1~h sont ajoutées dans certaines variantes. L'ACF mesure $\rho(h)=\mathrm{Corr}(r_t,r_{t-h})$ ; la PACF mesure la dépendance restante après prise en compte des retards intermédiaires. Un bruit blanc a une moyenne constante, une variance constante et des autocorrélations nulles aux retards non nuls.
+
+Les comparaisons utilisent les mêmes dates à chaque échelle. Les lissages centrés et STL utilisent le futur : leurs résultats sont descriptifs, pas des prévisions réalisables à 14~h. Cette exploration conserve la grille RTE complète ; les changements d'heure sont exclus ensuite dans les modèles prédictifs.
+
+\subsection{Modèles de référence et modèles du cours}
+
+\subsubsection{Benchmarks}
+
+Trois benchmarks représentent les familles du cours : persistance, naïf saisonnier et moyenne historique. Pour l'heure cible $t$, et la dernière heure autorisée $c$ :
+\[
+\widehat C_t^{\mathrm{persistance}}=C_c,\qquad
+\widehat C_t^{\mathrm{semaine}}=C_{t-7\,\mathrm{j}},\qquad
+\widehat C_t^{\mathrm{4\ semaines}}=\frac14\sum_{k=1}^{4}C_{t-7k\,\mathrm{j}}.
+\]
+Les références hebdomadaires conservent le jour de semaine et l'heure locale. Les dates sont recherchées explicitement ; une moyenne sur moins de quatre semaines n'est pas autorisée.
+
+\subsubsection{AR, MA et ARMA}
+
+La première comparaison porte sur AR(1), AR(2), MA(1) et ARMA(1,1), les quatre candidats proposés dans les slides de modélisation. Ils sont ajustés à la même série transformée :
+\[
+z_t=(1-B)(1-B^{24})C_t
+=C_t-C_{t-1}-C_{t-24}+C_{t-25},
+\]
+où $BC_t=C_{t-1}$. Les modèles ajustés à $z_t$ s'écrivent :
+\[
+\begin{array}{ll}
+\mathrm{AR}(1) &: z_t=\phi_1z_{t-1}+\varepsilon_t,\\
+\mathrm{AR}(2) &: z_t=\phi_1z_{t-1}+\phi_2z_{t-2}+\varepsilon_t,\\
+\mathrm{MA}(1) &: z_t=\varepsilon_t+\theta_1\varepsilon_{t-1},\\
+\mathrm{ARMA}(1,1) &: z_t=\phi_1z_{t-1}+\varepsilon_t+\theta_1\varepsilon_{t-1}.
+\end{array}
+\]
+Les termes AR utilisent les valeurs passées de la série transformée ; les termes MA utilisent les innovations passées $\varepsilon_t$, supposées de moyenne nulle et de variance constante. Un MA(1) n'est donc pas une moyenne mobile des consommations observées.
+ Les différences visent respectivement la persistance lente et le cycle quotidien ; leur pertinence doit être vérifiée par les diagnostics et la prévision. Il ne s'agit pas d'une garantie de stationnarité. Les coefficients sont estimés par maximum de vraisemblance gaussienne, sans constante, sous contraintes de stationnarité et d'inversibilité. Les ACF/PACF et le test de Ljung--Box aux retards 24 et 168 vérifient si les innovations à un pas restent autocorrélées. Ce diagnostic utilise le plus long bloc continu d'apprentissage après amorçage, sans recoller les périodes séparées par des valeurs manquantes.
+
+Nous calculons les critères d'information :
+\[
+\mathrm{AIC}=-2\widehat\ell+2k,\qquad
+\mathrm{BIC}=-2\widehat\ell+k\log(n).
+\]
+$\widehat\ell$ est la log-vraisemblance au maximum estimé, $k$ le nombre de paramètres et $n$ le nombre d'observations disponibles dans l'apprentissage. La formule de l'AIC est celle des slides de modélisation (diapositive 33) ; le BIC, mentionné dans le cours, utilise sa définition usuelle. La variance des innovations est un paramètre : $k=2$ pour AR(1) et MA(1), $k=3$ pour AR(2) et ARMA(1,1), sans constante.
+
+Le script \texttt{criteres\_information.py} reprend les coefficients enregistrés et recalcule la vraisemblance sans réestimation, à la même échelle en GW. Pour le BIC, $n$ exclut les valeurs masquées, d'où un léger écart avec la valeur automatique du logiciel qui compte la longueur de la grille. Un critère plus faible est préféré entre modèles ajustés sur les mêmes dates, la même transformation et la même échelle. Ces critères complètent les erreurs de prévision, sans les remplacer.
+
+\subsubsection{Estimation et évaluation chronologique}
+
+L'exploration utilise 2012--2023 ; les évaluations internes portent sur 2021, 2022 et 2023. Pour chaque année, les ARMA sont réestimés sur les deux années précédant la première coupure, le 31 décembre à 8~h. Cette fenêtre de deux ans est un choix pratique fixé avant le calcul : elle limite le temps d'estimation et privilégie les observations récentes, pour tenir compte d'une possible évolution des comportements de consommation. Sa durée n'a pas été optimisée ni comparée à un apprentissage sur toute la période depuis 2012 ; nous ne supposons donc pas qu'elle soit optimale. À l'inverse, les régressions présentées ensuite utilisent toutes les années antérieures disponibles depuis 2012. Les deux familles ne reposent donc pas sur la même longueur d'historique d'apprentissage. Les paramètres restent constants dans l'année ; les états filtrés sont actualisés avec les nouvelles observations autorisées. Le candidat ARMA est retenu par RMSE agrégée interne, puis évalué sur 2024 sans nouveau choix d'hyperparamètres. L'année 2024 ayant déjà été consultée lors des explorations précédentes, elle reste une validation ; le test final 2025 n'est pas évalué.
+
+Pour simuler la prévision à $J$, 14~h, la consommation est limitée à $J$, 8~h pour les sept méthodes. Cette marge conservatrice suppose que la moyenne incluant 8~h~30 est publiée avant 14~h, sans le garantir historiquement. Les prévisions sont récursives jusqu'à $J+1$, 23~h ; l'inversion utilise
+\[
+\widehat C_t=\widehat z_t+\widehat C_{t-1}+\widehat C_{t-24}-\widehat C_{t-25},
+\]
+avec observations pour les termes déjà connus et prévisions pour les autres. Aucune observation de l'horizon n'est réinjectée. L'inversion et le caractère causal du filtrage sont contrôlés numériquement. Les jours incomplets, les historiques de 25 heures incomplets et les références hebdomadaires manquantes sont exclus pour toutes les méthodes. Les trous ne sont pas recollés.
+
+Pour $N$ heures évaluées, nous posons $e_t=C_t-\widehat C_t$ et calculons
+\[
+\mathrm{MAE}=\frac{1}{N}\sum_t|e_t|,\qquad
+\mathrm{RMSE}=\sqrt{\frac{1}{N}\sum_t e_t^2},\qquad
+\mathrm{biais}=\frac{1}{N}\sum_t e_t.
+\]
+La RMSE pénalise davantage les grandes erreurs. Un biais négatif indique une surestimation moyenne. L'erreur d'énergie quotidienne est $\sum_{h=0}^{23}e_{J,h}\times1\,\mathrm{h}$, en MWh. Nous examinons aussi la différence entre les pointes prévues et observées, ainsi qu'entre leurs heures ; les résumés journaliers utilisent les valeurs absolues. Les résultats sont étudiés par année et par heure, puis sur trois journées de fortes erreurs. Les innovations à un pas et les erreurs de prévision de J+1 sont deux diagnostics distincts.
+
+\subsection{Modèles d’apprentissage supervisé (ML)}
+
+\subsubsection{Régression linéaire multiple : modèle M09}
+
+La deuxième famille utilise des variables explicatives pour apprendre la consommation cible. La régression linéaire multiple M09 constitue le premier modèle étudié dans cette partie. Elle représente simultanément la tendance, les saisons, le calendrier et la météo. Elle porte directement sur la consommation en MW, sans différenciation ni retrait préalable de la tendance :
+\[
+C_t=\beta_0+\sum_{j=1}^{215}\beta_jX_{t,j}+u_t.
+\]
+Il s'agit de 215 colonnes explicatives construites à partir de quelques variables sources, et non de 215 mesures indépendantes. La constante porte le total à 216 coefficients. Le tableau~\ref{tab:variables-m09} détaille cette construction, identique à celle du script \texttt{decomposition\_meteo\_calendrier.py}.
+
+\begin{table}[!htbp]
+\centering
+\fontsize{10}{12}\selectfont
+\caption{Construction des 215 colonnes de M09, hors constante.}
+\label{tab:variables-m09}
+\begin{tabularx}{\linewidth}{p{3cm} r X}
+\toprule
+Groupe & Nombre & Codage \\
+\midrule
+Tendance & 1 & Temps écoulé depuis le 1er janvier 2012, en années de 365,2425 jours. \\
+Cycle annuel & 6 & Trois paires sinus/cosinus de fréquences 1, 2 et 3 par an. \\
+Heure & 23 & Indicatrices des heures 1 à 23 ; 0~h en référence. \\
+Jour $\times$ heure & 144 & Six jours, du mardi au dimanche, croisés avec 24 heures ; lundi en référence. \\
+Jours fériés & 24 & Une indicatrice et 23 interactions avec l'heure ; effet spécifique à chaque heure. \\
+Vacances & 3 & Indicatrices des zones A, B et C ; leurs contributions s'additionnent en cas de chevauchement. \\
+Température & 7 & $T$ et six fonctions $(T-k)_+$, pour $k=0,5,10,15,20,25$~$^{\circ}$C. \\
+Température $\times$ horaire & 6 & Termes froid et chaud dans les plages 6--11, 12--17 et 18--23~h ; 0--5~h en référence. \\
+Précipitations & 1 & $\log(1+P)$, avec $P$ en mm/h. \\
+\midrule
+Total & 215 & Une constante supplémentaire est estimée. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+La notation $(x)_+=\max(x,0)$ définit les changements de pente de la température : sa contribution est continue et linéaire par morceaux. Les interactions horaires utilisent $(18-T)_+$ et $(T-22)_+$ pour autoriser une sensibilité au froid et au chaud différente selon le moment de la journée. Les seuils sont fixés dans le code, non optimisés sur 2024. La transformation logarithmique de la pluie atténue l'influence des fortes valeurs. Le modèle reste linéaire en ses coefficients, malgré la non-linéarité des variables transformées.
+
+Tous les effets sont ajustés ensemble par moindres carrés ordinaires, avec constante et sans pénalisation :
+\[
+(\widehat\beta_0,\widehat\beta)
+=\mathop{\rm arg\,min}_{b_0,b}\sum_{t\in\mathcal T}
+\left(C_t-b_0-\sum_{j=1}^{215}b_jX_{t,j}\right)^2.
+\]
+Le rang de la matrice centrée est contrôlé à chaque ajustement. Les catégories de référence évitent les redondances avec la constante. Le modèle estime des associations conditionnelles : les effets de météo, saison et calendrier sont corrélés et ne s'interprètent pas comme des effets causaux. Aucun intervalle de confiance fondé sur l'indépendance des erreurs n'est présenté.
+
+\subsubsection{Variantes, ablations et décomposition descriptive}
+
+Dix-huit variantes sont comparées : ajout progressif du jour de semaine, des jours fériés, des vacances, de la température linéaire puis par seuils ou morceaux, de la pluie et des interactions ; une tendance par morceaux est également testée. Les ablations retirent séparément pluie, vacances, jours fériés et température de M09. Toutes les variantes utilisent les mêmes heures où consommation et météo sont disponibles, hors changements d'heure, même lorsqu'une variante n'emploie pas la météo.
+
+L'évaluation interne prévoit successivement les valeurs de 2021, 2022 et 2023 après ajustement sur toutes les années antérieures depuis 2012. Le classement repose sur la RMSE des erreurs horaires regroupées, et non sur la moyenne des RMSE annuelles. La météo de l'heure cible est observée : cette étape sélectionne une relation explicative à météo parfaite, pas une prévision opérationnelle. Pour les figures descriptives uniquement, le modèle retenu est ensuite réajusté sur 2012--2023 ; les contributions sont centrées et leur moyenne est reportée dans le niveau constant, sans modifier la somme ajustée.
+
+\subsubsection{Correction des résidus et prévision du lendemain}
+
+Le résidu $u_t$ est la différence entre la consommation observée et la valeur ajustée par M09. Sa dépendance temporelle est représentée par une correction autorégressive. Une seconde régression par moindres carrés estime :
+\[
+u_t=a+\sum_{\ell\in L}\phi_\ell u_{t-\ell}+\varepsilon_t.
+\]
+Deux ensembles de retards sont comparés : $L=\{1,2,3\}$ et $L=\{1,2,3,24,25,48,168\}$. Cette estimation en deux étapes n'est pas un ajustement conjoint par maximum de vraisemblance. La prévision finale additionne la régression $\widehat f(X_t)$ et la correction $\widehat u_t$. Après la coupure, les résidus futurs sont prévus récursivement, sans réinjecter de consommation observée dans l'horizon.
+
+L'essai interne J+1 ajuste annuellement les deux régressions jusqu'au 30 décembre précédant l'année évaluée. À chaque origine $J$, 14~h, il utilise la consommation jusqu'à 12~h et un historique commun complet de 168 heures. M09 seul, les deux corrections AR et les trois benchmarks sont comparés sur les mêmes journées. La météo parfaite, y compris celle utilisée pour reconstruire certains résidus récents, rend cet essai non opérationnel.
+
+En validation 2024, les coefficients sont figés après ajustement jusqu'au 30 décembre 2023. Trois versions avec correction AR saisonnière sont évaluées : M09 à météo parfaite ; M09 alimenté par les températures et pluies aux mêmes heures UTC 48~h auparavant ; et une régression réestimée sans aucun terme météo (201 colonnes, plus constante). La coupure commune est $J$, 8~h. Pour les scénarios utilisant le passé, la disponibilité des mesures sources est contrôlée avec un délai de publication SYNOP supposé de trois heures. Les cibles, l'historique et les quatre références hebdomadaires doivent être complets pour toutes les méthodes. MAE, RMSE et biais sont calculés sur les mêmes heures ; énergie et pointe complètent l'essai interne. Les erreurs J+1 sont distinguées des innovations conditionnelles à une heure.
+
+Les trois protocoles ont des supports et des coupures distincts : aucun gain n'est calculé entre leurs tableaux. Le test final 2025 reste non évalué. Les délais historiques réels, les révisions RTE et la sélection des stations sur une période dépassant l'apprentissage limitent l'interprétation opérationnelle.
 
 
-\subsection{Benchmarks et modèles}
-\noindent
-
-\begin{algorithm}[h]
-    \caption{Un superbe algorithme}\label{alg:justanalgorithm}
-    \textit{Entrées}
-    \begin{itemize}
-        
-        \item[$\bullet$] $Variable = $ description de la variable
-        \item[$\bullet$] $Variable = $ description de la variable
-        \item[$\bullet$] $Variable = $ description de la variable
-        \item[$\bullet$] $Variable = $ description de la variable
-    \end{itemize}
-    \textit{Initialisations}
-    \begin{itemize}
-        \item[$\bullet$] $Variable = valeur$
-        \item[$\bullet$] Effectuer une action
-    \end{itemize}
-    \textit{Calculs}\\
-        \For{$variable \gets 0$ \KwTo $Variable$ \KwBy $1$}{
-            \ForEach{$truc \in machin$}{
-                Faire à $truc$ quelque chose prenant en compte $Variable$ \\
-                Mise à jour de $machin$
-            }
-        $Variable = Variable \times Variable$
-        }
-    \textit{Sorties}
-    \begin{itemize}
-        \item[$\bullet$] Ce que l'on sort de l'algorithme
-    \end{itemize}
-\end{algorithm}
-
-\subsection{Validation chronologique et métriques}
-\noindent
-
-\subsubsection{Sous-sous-section}
-\noindent
+% Ajouter ici les méthodes des autres modèles de ML.

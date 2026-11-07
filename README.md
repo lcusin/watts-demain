@@ -29,3 +29,19 @@ Une valeur observée après 14 h le jour J ne peut pas servir à prévoir J+1 da
 
 ## Travail en groupe
 Créer une issue GitHub par tâche, travailler sur une branche par tâche, puis faire relire chaque pull request par une autre personne. Les notes individuelles ne remplacent pas le journal commun ni la compréhension collective du code.
+
+## Analyse de consommation et validation
+
+Le travail reproductible du 7 novembre 2026 est rassemble dans
+[analyse_consommation](analyse_consommation/README.md), avec les scripts,
+protocoles, graphiques, resultats et une synthese pour le rendu.
+La fusion canonique et ses conventions sont documentees dans
+[data/merge/README.md](data/merge/README.md).
+
+## Comparaison des modèles du cours
+
+Le rapport compare désormais AR(1), AR(2), MA(1), ARMA(1,1) et les trois benchmarks. Protocole et résultats : [modèles du cours](analyse_consommation/docs/12_modeles_cours.md). Les essais de régression météo/calendrier restent des extensions exploratoires. Pour reproduire cette comparaison :
+
+```bash
+python analyse_consommation/executer.py --depuis 9 --jusqua 9
+```

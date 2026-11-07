@@ -1,0 +1,239 @@
+{
+  "statut": "Historique avant remplacement de Ridge par les moindres carres, non utilise pour choisir sur 2024.",
+  "scores": {
+    "06_meteo_calendrier/comparaison_2021_2023.csv": [
+      {
+        "modele": "M09_interactions",
+        "MAE_MW": 2267.833453182988,
+        "RMSE_MW": 2952.8872891481924,
+        "biais_MW": -756.9779255847701,
+        "n": 26076
+      },
+      {
+        "modele": "M14_M09_sans_pluie",
+        "MAE_MW": 2266.3498912396185,
+        "RMSE_MW": 2960.9662317627008,
+        "biais_MW": -755.533125520437,
+        "n": 26076
+      },
+      {
+        "modele": "M15_M09_sans_vacances",
+        "MAE_MW": 2255.85764558895,
+        "RMSE_MW": 2991.3366759544,
+        "biais_MW": -738.5307669750019,
+        "n": 26076
+      },
+      {
+        "modele": "M08_splines_pluie",
+        "MAE_MW": 2370.304615950617,
+        "RMSE_MW": 3055.9586394702906,
+        "biais_MW": -731.5731972264282,
+        "n": 26076
+      },
+      {
+        "modele": "M16_M09_sans_feries",
+        "MAE_MW": 2349.330973874427,
+        "RMSE_MW": 3073.4255536748005,
+        "biais_MW": -766.0483154545618,
+        "n": 26076
+      },
+      {
+        "modele": "M07_seuils_pluie",
+        "MAE_MW": 2545.6969271628845,
+        "RMSE_MW": 3275.364495722424,
+        "biais_MW": -630.6384498607886,
+        "n": 26076
+      },
+      {
+        "modele": "M05_temperature_seuils",
+        "MAE_MW": 2542.9808419754345,
+        "RMSE_MW": 3275.810425807912,
+        "biais_MW": -632.336504393728,
+        "n": 26076
+      },
+      {
+        "modele": "M10_tendance_flexible",
+        "MAE_MW": 2573.653095119299,
+        "RMSE_MW": 3296.6232597201697,
+        "biais_MW": -241.84115582011245,
+        "n": 26076
+      },
+      {
+        "modele": "M11_sans_pluie",
+        "MAE_MW": 2572.9391178637247,
+        "RMSE_MW": 3298.080459106433,
+        "biais_MW": -241.25865246959472,
+        "n": 26076
+      },
+      {
+        "modele": "M12_sans_vacances",
+        "MAE_MW": 2565.553947547135,
+        "RMSE_MW": 3331.182815170837,
+        "biais_MW": -192.7599606735129,
+        "n": 26076
+      },
+      {
+        "modele": "M13_sans_feries",
+        "MAE_MW": 2647.980871552075,
+        "RMSE_MW": 3400.049625897622,
+        "biais_MW": -267.60020550302744,
+        "n": 26076
+      },
+      {
+        "modele": "M04_temperature_lineaire",
+        "MAE_MW": 3250.155860999132,
+        "RMSE_MW": 4178.896677091259,
+        "biais_MW": -604.623352211539,
+        "n": 26076
+      },
+      {
+        "modele": "M17_M09_sans_temperature",
+        "MAE_MW": 3609.771842389938,
+        "RMSE_MW": 4855.590668949675,
+        "biais_MW": -518.6029177087357,
+        "n": 26076
+      },
+      {
+        "modele": "M06_pluie_seule",
+        "MAE_MW": 3632.329606448674,
+        "RMSE_MW": 4872.452690975171,
+        "biais_MW": -518.7632111653978,
+        "n": 26076
+      },
+      {
+        "modele": "M03_vacances",
+        "MAE_MW": 3640.35540272949,
+        "RMSE_MW": 4880.604826874808,
+        "biais_MW": -518.0957808777098,
+        "n": 26076
+      },
+      {
+        "modele": "M02_feries",
+        "MAE_MW": 3685.912531884559,
+        "RMSE_MW": 5015.548176743151,
+        "biais_MW": -485.7630639830132,
+        "n": 26076
+      },
+      {
+        "modele": "M01_semaine",
+        "MAE_MW": 3739.382681383084,
+        "RMSE_MW": 5123.285102880084,
+        "biais_MW": -490.29284062294033,
+        "n": 26076
+      },
+      {
+        "modele": "M00_saisons",
+        "MAE_MW": 4467.504501947604,
+        "RMSE_MW": 5838.295290436609,
+        "biais_MW": -499.69782085633966,
+        "n": 26076
+      }
+    ],
+    "07_prevision_ar/comparaison.csv": [
+      {
+        "modele": "M09_AR_saisonnier",
+        "jours": 991,
+        "MAE_MW": 1196.34203110441,
+        "RMSE_MW": 1736.8852904376045,
+        "biais_MW": -103.98662409576696,
+        "MAE_energie_MWh": 23621.846314145954,
+        "MAE_pointe_MW": 1042.64896382084,
+        "MAE_heure_pointe": 1.6266397578203835
+      },
+      {
+        "modele": "M09_AR_court",
+        "jours": 991,
+        "MAE_MW": 1936.410215536026,
+        "RMSE_MW": 2558.217775479275,
+        "biais_MW": -584.9531406925173,
+        "MAE_energie_MWh": 39862.474093211546,
+        "MAE_pointe_MW": 1716.6367603516069,
+        "MAE_heure_pointe": 2.3037336024217963
+      },
+      {
+        "modele": "M09_seul",
+        "jours": 991,
+        "MAE_MW": 2192.8120745371007,
+        "RMSE_MW": 2876.3001328913865,
+        "biais_MW": -693.7849179700755,
+        "MAE_energie_MWh": 46867.12434324704,
+        "MAE_pointe_MW": 1957.2315690770336,
+        "MAE_heure_pointe": 2.4117053481331987
+      },
+      {
+        "modele": "benchmark_semaine",
+        "jours": 991,
+        "MAE_MW": 3520.290741675076,
+        "RMSE_MW": 5336.329529309378,
+        "biais_MW": -84.70942650521359,
+        "MAE_energie_MWh": 81558.14429868819,
+        "MAE_pointe_MW": 3736.860746720484,
+        "MAE_heure_pointe": 2.082744702320888
+      },
+      {
+        "modele": "benchmark_4_semaines",
+        "jours": 991,
+        "MAE_MW": 4249.452299865456,
+        "RMSE_MW": 5967.564023063516,
+        "biais_MW": -97.18962327615203,
+        "MAE_energie_MWh": 99093.69172552976,
+        "MAE_pointe_MW": 4419.834132189708,
+        "MAE_heure_pointe": 1.881937436932392
+      },
+      {
+        "modele": "benchmark_persistance",
+        "jours": 991,
+        "MAE_MW": 6687.026425327952,
+        "RMSE_MW": 8047.699517761626,
+        "biais_MW": -5513.423330810629,
+        "MAE_energie_MWh": 143775.16801210897,
+        "MAE_pointe_MW": 3163.111503531786,
+        "MAE_heure_pointe": 13.375378405650858
+      }
+    ],
+    "08_validation_2024/comparaison.csv": [
+      {
+        "scenario": "benchmark_4_semaines",
+        "n": 7992,
+        "MAE_MW": 3583.735954704705,
+        "RMSE_MW": 5296.269059517129,
+        "biais_MW": 504.9119744744745
+      },
+      {
+        "scenario": "benchmark_persistance",
+        "n": 7992,
+        "MAE_MW": 5661.013763763764,
+        "RMSE_MW": 7054.956650049955,
+        "biais_MW": -671.3402152152153
+      },
+      {
+        "scenario": "benchmark_semaine",
+        "n": 7992,
+        "MAE_MW": 3251.0241491491493,
+        "RMSE_MW": 4931.780335731196,
+        "biais_MW": 246.3234484484485
+      },
+      {
+        "scenario": "meteo_parfaite",
+        "n": 7992,
+        "MAE_MW": 1420.1293197718362,
+        "RMSE_MW": 1981.2799711581235,
+        "biais_MW": -85.21380397002494
+      },
+      {
+        "scenario": "meteo_persistance_48h",
+        "n": 7992,
+        "MAE_MW": 2261.452078962531,
+        "RMSE_MW": 3289.432609129768,
+        "biais_MW": 20.896433017820417
+      },
+      {
+        "scenario": "sans_meteo",
+        "n": 7992,
+        "MAE_MW": 1711.5155572982376,
+        "RMSE_MW": 2415.5763868599543,
+        "biais_MW": 52.19631525869953
+      }
+    ]
+  }
+}

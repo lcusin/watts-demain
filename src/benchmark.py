@@ -78,6 +78,12 @@ df = pd.concat(
 
 # Trier les observations par horodatage.
 df = df.sort_values("horodatage")
+assert not df["horodatage"].duplicated().any()
+assert df["horodatage"].diff().dropna().eq(pd.Timedelta(hours=1)).all()
+
+# Masquer les changements d'heure sans retirer les lignes.
+# Ainsi, shift(7) sur les profils journaliers reste un decalage de sept jours.
+df.loc[df["jour_changement_heure"], "consommation_MW"] = np.nan
 
 print("\nDimensions des données réunies :", df.shape)
 
@@ -137,7 +143,6 @@ print("Journées manquantes :", len(jours_manquants))
 # pas de calculer correctement les benchmarks.
 if (
     len(conso.columns) != 24
-    or conso.isna().any().any()
     or len(jours_manquants) > 0
 ):
     raise ValueError(
@@ -206,6 +211,15 @@ pred1 = prediction_semaine.loc[
 pred2 = prediction_moyenne.loc[
     "2024-01-01":"2024-12-31"
 ]
+
+# Garder les memes journees completes pour les deux benchmarks.
+# Une valeur masquee dans une des quatre semaines exclut la cible commune.
+jours_valides = (reel.notna().all(axis=1)
+                & pred1.notna().all(axis=1)
+                & pred2.notna().all(axis=1))
+reel = reel.loc[jours_valides]
+pred1 = pred1.loc[jours_valides]
+pred2 = pred2.loc[jours_valides]
 
 # Vérifier que les tableaux ont les mêmes dimensions.
 print("\nDimensions validation :")
@@ -343,6 +357,8 @@ dates_exemples = [
 
 # Parcourir les journées sélectionnées
 for date_exemple in dates_exemples:
+    if pd.Timestamp(date_exemple) not in reel.index:
+        continue  # Jour exclu de la comparaison commune.
 
     # Créer une nouvelle figure pour chaque journée
     plt.figure(figsize=(12, 5))
