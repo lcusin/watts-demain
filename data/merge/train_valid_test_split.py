@@ -18,7 +18,7 @@ df = pd.read_csv(
 # ==================================================
 
 # Train : données de 2012 à 2023
-train = df[df["date"] < "2024-01-01"].copy()
+train = df[(df["date"] >= "2012-01-01") & (df["date"] < "2024-01-01")].copy()
 
 # Validation : données de 2024
 validation = df[
@@ -28,7 +28,7 @@ validation = df[
 
 # Test : données de 2025
 test = df[
-    df["date"] >= "2025-01-01"
+    (df["date"] >= "2025-01-01") & (df["date"] < "2026-01-01")
 ].copy()
 
 # ==================================================

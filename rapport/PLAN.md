@@ -7,13 +7,21 @@ Le rapport suit les modèles effectivement présentés dans les slides. Il ne pr
 3. **Résultats** : stations et couverture géographique, profils et tendance ; diagnostics de décomposition ; comparaison prédictive interne et 2024 ; innovations ; résultats exploratoires météo clairement séparés.
 4. **Discussion et audit** : tableau de disponibilité, trois journées d'échec, robustesse et métriques complémentaires, limites de déploiement et trois exemples d'usage critique de l'IA.
 
+## Contraintes du rendu
+
+- Moins de 10 pages pour le corps du rapport ; page de titre, bibliographie et annexes techniques raisonnables hors décompte.
+- Consacrer environ 1 à 2 pages à l'audit critique.
+- Documenter trois exemples d'usage de l'IA : proposition conservée après vérification, proposition modifiée ou rejetée, et erreur détectée. Préciser la décision et la vérification pour chacun.
+- Terminer par une conclusion sur les résultats essentiels et les limites.
+
 ## Protocole réellement exécuté
 
 - Exploration : 2012–2023.
-- Comparaison interne : 2021–2023, fenêtre de deux ans, estimation annuelle par maximum de vraisemblance.
+- Comparaison interne des AR, MA et ARMA : 2021–2023, fenêtre de deux ans, estimation annuelle par maximum de vraisemblance. Cette fenêtre limite le coût de calcul et privilégie les observations récentes ; sa durée n'a pas été optimisée.
+- Régressions météo/calendrier : apprentissage sur toutes les années antérieures disponibles depuis 2012, puis évaluation successive sur 2021, 2022 et 2023.
 - Validation : 2024 ; modèle choisi sur la RMSE interne. Cette validation avait déjà été consultée dans d'autres expériences.
 - Test final : 2025 réservé, non évalué.
-- Coupure : J8 pour une prévision émise à J14 ; 1 053 journées internes et 352 en 2024, communes aux sept méthodes.
+- Comparaison des modèles du cours et des benchmarks : coupure J8 pour une prévision émise à J14 ; 1 053 journées internes et 352 en 2024, communes aux sept méthodes.
 - Références : persistance, semaine précédente, moyenne des quatre semaines.
 - Résultat : AR(2) est le meilleur des quatre candidats ARMA ; la semaine précédente reste meilleure globalement. Les innovations ne sont pas blanches.
 

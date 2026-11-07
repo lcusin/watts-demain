@@ -1,8 +1,9 @@
-# Dépendances de départ ; ajouter et fixer les versions utilisées avant le rendu.
-jupyter
-pandas
-numpy
-matplotlib
-scikit-learn
-statsmodels>=0.14
-scipy
+# Environnement de référence de Lola : Anaconda, Python 3.11.7.
+numpy==1.26.4
+pandas==2.1.4
+matplotlib==3.7.3
+scipy==1.11.4
+scikit-learn==1.2.2
+statsmodels==0.14.0
+threadpoolctl==2.2.0
+seaborn==0.12.2

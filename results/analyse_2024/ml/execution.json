@@ -1,0 +1,15 @@
+{
+  "fichiers": {
+    "data\\merge\\train.csv": "d0b74700f073a378c19fa1a62bd21999bc7817ef4c58406d5c822eebee7d34bf",
+    "data\\merge\\validation.csv": "8efe33504b702b4dbe2e33dc92cd788a6ed3531e4da17774a4297cdd58d81b72",
+    "src\\protocole.py": "5e0390750ebf57e0aa669f602a19c4db9c0f17726caaf7dc7e493b3b3edb03b5",
+    "src\\modeles_ml.py": "7a3854301513aab8467c48c28f633b69638db6a8e0a76cb1860d78ee703b3f80"
+  },
+  "python": "3.11.7",
+  "versions": {
+    "numpy": "1.26.4",
+    "pandas": "2.1.4",
+    "scikit-learn": "1.2.2",
+    "statsmodels": "0.14.0"
+  }
+}

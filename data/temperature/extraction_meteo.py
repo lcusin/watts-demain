@@ -50,7 +50,7 @@ def telecharger():
                 statut, erreur = "erreur", str(e)
                 temporaire.unlink(missing_ok=True)
         journal.append({"annee": annee, "fichier": nom, "statut": statut, "source": source, "erreur": erreur})
-    sauver(pd.DataFrame(journal), METEO / "journal_telechargement.csv")
+    sauver(pd.DataFrame(journal), PREPARE / "journal_telechargement.csv")
 
 
 # 2. Importer les observations et inventorier les stations.

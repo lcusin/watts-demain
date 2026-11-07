@@ -1,7 +1,0 @@
-# Dépendances de départ ; ajouter et fixer les versions utilisées avant le rendu.
-jupyter
-pandas
-numpy
-matplotlib
-scikit-learn
-statsmodels
