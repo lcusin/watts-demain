@@ -21,7 +21,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import mean_absolute_error, mean_squared_error
 
 BASE = Path(__file__).resolve().parent.parent
-DATA = BASE / 'data' / 'processed'
+DATA = BASE / 'data' / 'merge'
 SORTIE = BASE / 'data_temp' / 'graphiques' / 'previsions_ml_horaires'
 CIBLE = 'consommation_MW'
 CONSO = ['consommation_MW', 'consommation_00_MW', 'consommation_30_MW']

@@ -22,7 +22,7 @@ from statsmodels.tsa.arima.model import ARIMA
 
 # Dossiers du projet
 BASE = Path(__file__).resolve().parent.parent
-DATA = BASE / "data" / "processed"
+DATA = BASE / "data" / "merge"
 SORTIE = BASE / "data_temp" / "graphiques" / "previsions_statistiques_horaires"
 SORTIE.mkdir(parents=True, exist_ok=True)
 

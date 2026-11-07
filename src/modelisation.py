@@ -31,7 +31,7 @@ from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-FICHIER_TRAIN = BASE_DIR / "data" / "processed" / "train.csv"
+FICHIER_TRAIN = BASE_DIR / "data" / "merge" / "train.csv"
 
 DOSSIER_GRAPHIQUES = (
     BASE_DIR / "data_temp" / "graphiques" / "modelisation"

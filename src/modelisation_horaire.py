@@ -10,7 +10,7 @@ SORTIE = BASE / 'data_temp' / 'graphiques' / 'modelisation_horaire'
 SORTIE.mkdir(parents=True, exist_ok=True)
 
 def charger(nom):
-    df = pd.read_csv(BASE / 'data' / 'processed' / nom, parse_dates=['horodatage'])
+    df = pd.read_csv(BASE / 'data' / 'merge' / nom, parse_dates=['horodatage'])
     # Une observation par heure : vérifier les doublons et les heures absentes.
     if df['horodatage'].duplicated().any():
         raise ValueError('Horodatages en double : vérifier le changement d’heure et le fuseau horaire.')

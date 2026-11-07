@@ -32,7 +32,7 @@ import matplotlib.pyplot as plt
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Chemin du dossier contenant les données préparées.
-DOSSIER_DATA = BASE_DIR / "data" / "processed"
+DOSSIER_DATA = BASE_DIR / "data" / "merge"
 
 # Charger les données d'entraînement (2012-2023).
 train = pd.read_csv(
