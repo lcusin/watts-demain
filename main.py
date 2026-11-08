@@ -13,8 +13,8 @@ ETAPES = [
     ("Exploration du train", ["src/exploration.py"]),
     ("Couverture geographique", ["src/couverture_geographique.py"]),
     ("Benchmarks", ["src/benchmarks.py"]),
-    ("AR et ARMA", ["src/modeles_statistiques.py"]),
-    ("Machine learning", ["src/modeles_ml.py"]),
+    ("AR et ARMA", ["src/modeles_statistiques.py", "src/diagnostics_residus.py"]),
+    ("Machine learning", ["src/modeles_ml.py", "src/ablation_variables.py"]),
     ("Contrôles et synthèse", ["src/synthese.py"]),
     ("Diagnostics complémentaires", ["src/diagnostics.py"]),
 ]

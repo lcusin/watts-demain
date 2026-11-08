@@ -1,3 +1,4 @@
+
 % !TeX root = main.tex
 
 \section{Méthodes}
@@ -30,7 +31,7 @@ L'objectif est de prévoir, à 14~h le jour $J$, les 24 puissances moyennes hora
     \end{tabularx}
 \end{table}
 
-Les stations météorologiques métropolitaines sont retenues si leur couverture est strictement supérieure à 95\,\% pour la température et pour les précipitations. Les valeurs contradictoires pour une même station et un même instant sont considérées comme manquantes. Les moyennes nationales sont calculées avec des poids égaux entre les stations disponibles. L'écart-type entre stations décrit leur dispersion spatiale et ne constitue pas un intervalle de confiance national.
+Les stations météorologiques métropolitaines sont retenues si leur couverture sur 2012--2023 est strictement supérieure à 95\,\% pour la température et pour les précipitations. Les valeurs contradictoires pour une même station et un même instant sont considérées comme manquantes. Les moyennes nationales sont calculées avec des poids égaux entre les stations disponibles. L'écart-type entre stations décrit leur dispersion spatiale et ne constitue pas un intervalle de confiance national.
 
 La consommation et le calendrier sont exprimés en heure civile française. Les dates sont converties en UTC pour effectuer la jointure avec les observations météorologiques. La pluie associée à une heure $h$ correspond à l'intervalle $[h,h+1]$.
 
@@ -58,11 +59,13 @@ Les données sont séparées chronologiquement en trois périodes :
 
 Pour chaque journée à prévoir, les modèles utilisent la consommation disponible jusqu'à 8~h le jour $J$. Cette coupure est une hypothèse conservatrice : la disponibilité historique exacte de toutes les données RTE à 14~h n'a pas été vérifiée.
 
-La température et les précipitations horaires sont reconstruites à partir d'observations SYNOP espacées de trois heures. Une valeur reconstruite peut donc dépendre d'une mesure ultérieure. Nous utilisons uniquement les valeurs météorologiques passées dont la disponibilité estimée est antérieure à l'origine de prévision, en supposant un délai de publication de trois heures. La météo effectivement observée pendant $J+1$ n'est pas utilisée comme variable explicative.
+La température et les précipitations horaires sont reconstruites à partir d'observations SYNOP espacées de trois heures. Une température interpolée peut dépendre de la mesure suivante ; une pluie horaire provient du cumul de trois heures terminé à la mesure suivante. Nous conservons seulement la météo passée dont cette mesure suivante serait disponible à 14~h le jour $J$, en supposant un délai de publication de trois heures non vérifié historiquement. La météo effectivement observée pendant $J+1$ n'est pas utilisée comme variable explicative.
 
 Les méthodes sont évaluées sur les mêmes journées complètes. Une journée est exclue si la cible, les observations historiques nécessaires ou les références des benchmarks sont indisponibles. Cela conduit notamment à exclure les journées de changement d'heure et certaines journées suivantes.
 
 Pour la première prévision de 2024, les modèles de machine learning sont entraînés sur les cibles disponibles jusqu'au 30 décembre 2023. Les modèles statistiques utilisent les observations disponibles jusqu'au 31 décembre 2023 à 8~h. Leurs paramètres restent ensuite fixes pendant la validation, tandis que leurs états sont actualisés avec les observations disponibles avant chaque prévision.
+
+Après la sélection des méthodes sur 2024, le test 2025 prévoit un réentraînement des modèles avec les données de 2012--2024 disponibles avant la première origine de prévision de 2025, sans modifier les configurations retenues. Les états des modèles statistiques seront ensuite actualisés jusqu'à chaque coupure à 8~h, sans réestimer leurs paramètres pendant l'évaluation.
 
 \subsection{Modèles de référence}
 
@@ -120,11 +123,11 @@ Les critères d'information AIC et BIC complètent la comparaison des modèles s
 
 \[
 \mathrm{AIC} = -2\ell(\widehat{\theta}) + 2k,
-\qquad \text{et} \qquad
-\mathrm{BIC} = -2\ell(\widehat{\theta}) + k\log(n).
+\qquad
+\mathrm{BIC} = -2\ell(\widehat{\theta}) + k\log(n),
 \]
 
-où $\widehat{\ell}$ est la log-vraisemblance estimée, $k$ le nombre de paramètres et $n$ le nombre d'observations retenu par le logiciel. Une valeur plus faible est préférée pour comparer des modèles ajustés sur la même série. Ces critères ne remplacent pas l'évaluation des prévisions hors échantillon.
+où $\ell(\widehat{\theta})$ est la log-vraisemblance évaluée aux paramètres estimés, $k$ le nombre de paramètres et $n$ le nombre d'observations retenu par le logiciel. Une valeur plus faible est préférée pour comparer des modèles ajustés sur la même série. Ces critères ne remplacent pas l'évaluation des prévisions hors échantillon.
 
 \subsection{Modèles de machine learning}
 

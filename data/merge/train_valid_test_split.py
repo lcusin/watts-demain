@@ -12,6 +12,13 @@ df = pd.read_csv(
     DOSSIER_DATA / "donnees_combinees.csv",
     parse_dates=["horodatage", "date"]
 )
+if df[["horodatage", "date"]].isna().any().any() or df.horodatage.duplicated().any():
+    raise ValueError("Dates ou horodatages manquants ou dupliqués")
+if not df.horodatage.dt.normalize().eq(df.date).all():
+    raise ValueError("Dates et horodatages incohérents")
+grille = pd.date_range("2012-01-01", "2025-12-31 23:00", freq="h")
+if not pd.DatetimeIndex(df.horodatage.sort_values()).equals(grille):
+    raise ValueError("Grille horaire 2012-2025 incomplète ou hors période")
 
 # ==================================================
 # 1. DÉCOUPAGE CHRONOLOGIQUE
@@ -30,6 +37,10 @@ validation = df[
 test = df[
     (df["date"] >= "2025-01-01") & (df["date"] < "2026-01-01")
 ].copy()
+if len(train) + len(validation) + len(test) != len(df):
+    raise ValueError("Périodes d'apprentissage, validation et test incomplètes")
+if not (train.horodatage.max() < validation.horodatage.min() < test.horodatage.min()):
+    raise ValueError("Chevauchement entre les trois périodes")
 
 # ==================================================
 # 2. VÉRIFICATION

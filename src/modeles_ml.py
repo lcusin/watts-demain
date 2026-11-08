@@ -190,6 +190,26 @@ def creer_exemples(df, jours_cibles):
     return X, y, meta
 
 
+def creer_modeles():
+    """Utiliser les memes configurations en validation et en test."""
+    return {
+        'Regression lineaire': make_pipeline(
+            SimpleImputer(strategy='median', keep_empty_features=True),
+            StandardScaler(), LinearRegression()),
+        'Ridge': make_pipeline(
+            SimpleImputer(strategy='median', keep_empty_features=True),
+            StandardScaler(), Ridge(alpha=100.0)),
+        'Random Forest': make_pipeline(
+            SimpleImputer(strategy='median', keep_empty_features=True),
+            RandomForestRegressor(n_estimators=100, max_depth=15,
+                                  min_samples_leaf=3, random_state=42, n_jobs=-1)),
+        'Gradient Boosting': make_pipeline(
+            SimpleImputer(strategy='median', keep_empty_features=True),
+            GradientBoostingRegressor(n_estimators=80, learning_rate=0.08,
+                                      max_depth=2, random_state=42)),
+    }
+
+
 def main():
     t0 = perf_counter()
     SORTIE.mkdir(parents=True, exist_ok=True)
@@ -222,22 +242,7 @@ def main():
         raise ValueError('Features TRAIN et VALIDATION différentes')
     pd.Series(X_train.columns, name='feature').to_csv(SORTIE / 'liste_features.csv', index=False)
 
-    modeles = {
-        'Regression lineaire': make_pipeline(
-            SimpleImputer(strategy='median', keep_empty_features=True),
-            StandardScaler(), LinearRegression()),
-        'Ridge': make_pipeline(
-            SimpleImputer(strategy='median', keep_empty_features=True),
-            StandardScaler(), Ridge(alpha=100.0)),
-        'Random Forest': make_pipeline(
-            SimpleImputer(strategy='median', keep_empty_features=True),
-            RandomForestRegressor(n_estimators=100, max_depth=15,
-                                  min_samples_leaf=3, random_state=42, n_jobs=-1)),
-        'Gradient Boosting': make_pipeline(
-            SimpleImputer(strategy='median', keep_empty_features=True),
-            GradientBoostingRegressor(n_estimators=80, learning_rate=0.08,
-                                      max_depth=2, random_state=42)),
-    }
+    modeles = creer_modeles()
     scores, toutes_previsions = [], []
     for nom, modele in modeles.items():
         print(f'\nEntraînement : {nom}...', flush=True)

@@ -17,6 +17,8 @@ from chemins import (BRUT, METEO, PREPARE, DEBUT, FIN,
 # Parametres de telechargement et de selection.
 URL = "https://object.files.data.gouv.fr/meteofrance/data/synchro_ftp/OBS/SYNOP/"
 SEUIL = 95
+ANNEE_DEBUT_SELECTION = 2012
+ANNEE_FIN_SELECTION = 2023
 EXPORT_DIAGNOSTICS = False  # True pour conserver les tableaux intermediaires.
 
 def valide(fichier):
@@ -173,7 +175,13 @@ def calculer_couverture(x, stations):
 
 # 6. Retenir les stations avec plus de 95 % de temperature ET de pluie.
 def selectionner(x, couverture):
-    bilan = couverture.groupby(["geo_id_wmo", "nom"])[["nb_temperature", "nb_rr3", "nb_attendus"]].sum().reset_index()
+    # La liste des stations est determinee uniquement sur la periode
+    # d'apprentissage, sans utiliser la validation 2024 ni le test 2025.
+    periode = couverture.loc[couverture.annee.between(
+        ANNEE_DEBUT_SELECTION, ANNEE_FIN_SELECTION)]
+    bilan = periode.groupby(["geo_id_wmo", "nom"])[
+        ["nb_temperature", "nb_rr3", "nb_attendus"]
+    ].sum().reset_index()
     bilan["couverture_temperature"] = 100 * bilan.nb_temperature / bilan.nb_attendus
     bilan["couverture_rr3"] = 100 * bilan.nb_rr3 / bilan.nb_attendus
     bilan["selectionnee"] = bilan.couverture_temperature.gt(SEUIL) & bilan.couverture_rr3.gt(SEUIL)

@@ -1,3 +1,4 @@
+
 % !TeX root = main.tex
 
 \section{Résultats}
@@ -45,7 +46,7 @@ La différence à 168~h compare chaque heure à la même heure de la semaine pr�
 
 \subsection{Comparaison des prévisions}
 
-Les dix méthodes sont comparées sur 338 journées communes de validation en 2024, soit 8\,112 heures par méthode. Les 28 journées restantes sont exclues en raison des changements d'heure et de leurs conséquences sur les historiques nécessaires aux prévisions.
+Les dix méthodes sont comparées sur 338 journées communes de validation en 2024, soit 8\,112 heures par méthode. Les 28 journées restantes sont exclues en raison des changements d'heure, de leurs conséquences sur les historiques nécessaires et des autres critères de disponibilité des observations.
 
 \begin{table}[htbp]
     \centering
@@ -71,7 +72,9 @@ Les dix méthodes sont comparées sur 338 journées communes de validation en 20
     \end{tabular}
 \end{table}
 
-La forêt aléatoire obtient la plus faible RMSE sur la validation 2024, suivie de la régression linéaire. Par rapport au benchmark de la semaine précédente, elle réduit la MAE de 48,8\,\% et la RMSE de 51,2\,\%.
+La forêt aléatoire obtient les plus faibles MAE et RMSE sur la validation 2024, suivie de la régression linéaire. Par rapport au benchmark de la semaine précédente, elle réduit la MAE de 48,8\,\% et la RMSE de 51,2\,\%.
+
+La régression linéaire et la régression Ridge obtiennent des performances relativement proches, avec des RMSE respectives de 2\,686 et 2\,733~MW. Elles surpassent notamment le gradient boosting, dont la RMSE atteint 3\,093~MW. La complexité d'un modèle ne garantit donc pas une meilleure précision prédictive. Ce classement doit néanmoins être interprété dans le contexte des hyperparamètres retenus, dont l'optimalité n'a pas été démontrée.
 
 Parmi les modèles statistiques, ARMA(1,1) obtient la plus faible RMSE de prévision. Le modèle AR(2) présente toutefois les AIC et BIC les plus faibles. Les critères d'ajustement et les erreurs de prévision hors échantillon ne conduisent donc pas nécessairement au même classement.
 
@@ -79,11 +82,78 @@ La forêt aléatoire présente une erreur absolue moyenne d'énergie quotidienne
 
 Pour le benchmark de persistance, l'erreur sur l'heure de pointe est peu interprétable : la prévision est constante sur les 24 heures et la première heure est retenue automatiquement comme heure de pointe.
 
+\subsection{Contribution des groupes de variables}
+
+Une expérience d'ablation a été réalisée afin d'évaluer la contribution des différentes familles de variables explicatives aux performances de la forêt aléatoire. Trois configurations sont comparées : les variables calendaires seules, leur association avec l'historique de consommation, puis l'ajout des variables météorologiques historiques.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.85\linewidth]{
+        ../results/analyse_2024/ablation/comparaison_ablation.png
+    }
+    \caption{Comparaison des RMSE de validation 2024 pour trois configurations de variables explicatives de la forêt aléatoire.}
+    \label{fig:ablation}
+\end{figure}
+
+Avec les seules variables calendaires, la RMSE atteint 6\,031,15~MW. L'ajout de l'historique de consommation la réduit à 2\,387,66~MW, soit une diminution relative de 60,4\,\%. Les observations passées de consommation constituent ainsi une source majeure d'information prédictive pour cette tâche.
+
+L'ajout supplémentaire des variables météorologiques historiques réduit la RMSE à 2\,383,19~MW. Ce gain de 4,47~MW représente une amélioration relative d'environ 0,19\,\% par rapport à la configuration comprenant déjà le calendrier et l'historique de consommation.
+
+Cette faible amélioration suggère que les variables météorologiques historiques apportent peu d'information prédictive supplémentaire dans la configuration étudiée. Elle ne signifie toutefois pas que les conditions météorologiques sont sans influence sur la consommation électrique. Une partie de leur effet peut notamment être déjà reflétée dans l'historique de consommation.
+
+L'expérience ne permet pas, à elle seule, de déterminer si ce faible gain est statistiquement significatif ou s'il se généralise à d'autres périodes et configurations.
+
 \subsection{Performances selon la saison et le type de journée}
 
-Les performances de la forêt aléatoire varient selon la saison. Sa RMSE est de 1\,065~MW en été, contre 3\,546~MW en hiver. Les erreurs sont donc plus importantes pendant la saison où la consommation est généralement plus élevée et plus sensible aux conditions météorologiques.
+Les performances de la forêt aléatoire varient selon la saison. Sa RMSE est de 1\,065~MW en été, contre 3\,546~MW en hiver. Cette différence pourrait notamment être liée aux variations saisonnières de la consommation et à sa sensibilité aux conditions météorologiques. Ces facteurs ne peuvent toutefois pas être isolés à partir de cette seule comparaison.
 
 La RMSE atteint 3\,175~MW pour les jours fériés, contre 2\,361~MW pour les autres journées. Cette comparaison repose toutefois sur seulement huit journées fériées évaluées ; elle doit donc être interprétée avec prudence.
+
+\subsection{Erreurs selon la température observée}
+
+Afin d'examiner les performances des modèles dans différentes conditions thermiques, les erreurs horaires de la forêt aléatoire et du benchmark de la semaine précédente sont regroupées selon la température observée.
+
+Cette analyse est réalisée a posteriori : les températures observées servent uniquement à caractériser les conditions associées aux erreurs. Elles ne correspondent pas à des températures futures connues au moment de la prévision.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.9\linewidth]{
+        ../results/analyse_2024/diagnostics/rmse_par_temperature.png
+    }
+    \caption{RMSE horaire selon la température observée en validation 2024. Les effectifs indiquent le nombre d'heures dans chaque catégorie.}
+    \label{fig:rmse_temperature}
+\end{figure}
+
+La forêt aléatoire présente une RMSE inférieure à celle du benchmark de la semaine précédente dans chacune des trois catégories disposant d'une température observée.
+
+Les erreurs augmentent lorsque les températures diminuent, particulièrement pour le benchmark hebdomadaire. Aux températures inférieures à 5~\textdegree C, celui-ci présente une dégradation plus marquée que la forêt aléatoire.
+
+Ces différences sont compatibles avec une difficulté accrue à prévoir la consommation dans certaines conditions froides. Elles ne démontrent cependant pas, à elles seules, un lien causal entre la température et l'ampleur des erreurs.
+
+Les catégories inférieure à 5~\textdegree C, comprise entre 5 et moins de 15~\textdegree C et supérieure ou égale à 15~\textdegree C regroupent respectivement 733, 4\,175 et 3\,199 heures.
+
+La catégorie correspondant à une météo manquante ne comprend que cinq heures. Son RMSE est donc particulièrement sensible à quelques observations et ne permet pas de conclure de manière robuste sur les performances des modèles en l'absence de données météorologiques.
+
+\subsection{Autocorrélation des erreurs de prévision}
+
+L'autocorrélation des erreurs horaires de prévision a été examinée pour les modèles AR(1), AR(2) et ARMA(1,1). Le diagnostic est calculé sur le plus long bloc temporel continu de validation, comprenant 4\,320 heures.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.95\linewidth]{
+        ../results/analyse_2024/diagnostics_residus/acf_residus.png
+    }
+    \caption{Fonctions d'autocorrélation des erreurs de prévision horaires des modèles statistiques sur le plus long bloc continu de validation 2024.}
+    \label{fig:acf_residus}
+\end{figure}
+
+Les fonctions d'autocorrélation révèlent une dépendance temporelle importante des erreurs, particulièrement aux premiers retards. Cette dépendance décroît progressivement, mais des structures temporelles persistent aux retards intermédiaires.
+
+Les tests de Ljung--Box réalisés aux retards de 24 et 168 heures conduisent, pour les trois modèles, au rejet de l'hypothèse nulle d'absence d'autocorrélation jusqu'aux retards considérés, avec des valeurs de $p$ inférieures à 0,001.
+
+Ces résultats indiquent que les erreurs de prévision conservent une structure temporelle exploitable, qui n'est pas entièrement capturée par les modèles étudiés.
+
+Il convient toutefois de distinguer les erreurs de prévision évaluées ici des innovations des modèles ajustés. Les premières résultent de prévisions à plusieurs horizons et ne constituent pas directement les résidus d'ajustement à un pas. Ces diagnostics ne doivent donc pas être interprétés comme un test de blancheur des innovations des modèles AR et ARMA.
 
 \subsection{Analyse de trois journées difficiles}
 
@@ -94,7 +164,7 @@ Les trois journées présentant les plus fortes RMSE quotidiennes pour la forêt
     \includegraphics[width=0.8\linewidth]{
         ../results/analyse_2024/diagnostics/trois_echecs.png
     }
-    \caption{Trois journées présentant de fortes erreurs pour la forêt aléatoire en validation 2024.}
+    \caption{Trois journées présentant les RMSE quotidiennes les plus élevées pour la forêt aléatoire en validation 2024.}
     \label{fig:echecs}
 \end{figure}
 
@@ -103,5 +173,7 @@ Le 24 décembre, la consommation est surestimée de 6\,958~MW en moyenne. Cette 
 Le 21 novembre et le 19 janvier, la consommation est sous-estimée de respectivement 7\,118~MW et 6\,940~MW en moyenne. Pour ces journées, les conditions météorologiques et les historiques disponibles avant la prévision peuvent être examinés pour mieux comprendre les erreurs.
 
 Dans les trois cas, le modèle reproduit globalement la forme du profil journalier, mais prévoit un niveau de consommation trop élevé ou trop faible.
+
+Le 19 janvier illustre particulièrement cette limite : malgré une meilleure performance globale sur la validation, la forêt aléatoire peut commettre une erreur plus importante qu'un benchmark simple sur certaines journées.
 
 Ces résultats décrivent la validation de 2024, déjà consultée lors des expériences. Ils ne constituent pas une évaluation indépendante sur le test final de 2025, qui reste réservé.

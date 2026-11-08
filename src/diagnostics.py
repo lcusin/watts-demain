@@ -1,4 +1,5 @@
 """Énergie quotidienne, pointes, saisons et trois journées d'échec sur la validation."""
+import argparse
 from pathlib import Path
 
 import matplotlib
@@ -11,6 +12,7 @@ from synthese import verifier, scores
 
 RACINE = Path(__file__).resolve().parent.parent
 SORTIE = RACINE / "results/analyse_2024/diagnostics"
+CLASSES = ["moins de 5 C", "5 a moins de 15 C", "15 C et plus", "meteo manquante"]
 
 
 def bilan_jour(g):
@@ -23,6 +25,47 @@ def bilan_jour(g):
             "erreur_pointe_MW": g.reel_MW.max() - g.prediction_MW.max(),
             "heure_pointe_reelle": heure_reelle, "heure_pointe_prevue": heure_prevue,
             "erreur_heure_pointe_h": abs(heure_reelle - heure_prevue)}
+
+
+def tracer_temperature(p, classement):
+    meilleur = classement.loc[classement.famille.ne("benchmarks")].iloc[0].modele
+    temperature = pd.DataFrame([
+        {"modele": nom, "classe_temperature": classe, **scores(g)}
+        for (nom, classe), g in p[p.modele.isin(
+            [meilleur, "semaine_precedente"]
+        )].groupby(["modele", "classe_temperature"], observed=True)
+    ])
+    tableau = temperature.pivot(
+        index="classe_temperature", columns="modele", values="RMSE_MW"
+    ).reindex(CLASSES)
+    effectifs = temperature.loc[temperature.modele.eq(meilleur)].set_index("classe_temperature")
+    fig, ax = plt.subplots(figsize=(10, 5))
+    tableau.plot.bar(ax=ax, rot=0)
+    ax.set(title="RMSE selon la température - validation 2024",
+           xlabel="Température moyenne horaire observée", ylabel="RMSE (MW)")
+    ax.set_xticklabels([f"{nom}\n(n = {int(effectifs.heures.get(nom, 0))})" for nom in CLASSES])
+    ax.grid(axis="y", alpha=.2)
+    fig.text(.5, .01, "Températures observées utilisées uniquement pour le diagnostic a posteriori.",
+             ha="center", fontsize=9)
+    fig.tight_layout(rect=(0, .06, 1, 1))
+    fig.savefig(SORTIE / "rmse_par_temperature.png", dpi=180)
+    plt.close(fig)
+
+
+def tracer_echecs(p, echecs, meilleur):
+    fig, axes = plt.subplots(len(echecs), 1, figsize=(11, 3.5*len(echecs)), squeeze=False)
+    for ax, ligne in zip(axes[:, 0], echecs.itertuples()):
+        g = p.loc[p.jour.eq(ligne.jour) & p.modele.eq(meilleur)].sort_values("horodatage")
+        reference = p.loc[p.jour.eq(ligne.jour) & p.modele.eq("semaine_precedente")].sort_values("horodatage")
+        ax.plot(g.heure, g.reel_MW, label="Observé")
+        ax.plot(g.heure, g.prediction_MW, label=meilleur)
+        ax.plot(reference.heure, reference.prediction_MW, label="Semaine précédente", linestyle="--")
+        ax.set(title=str(ligne.jour.date()), xlabel="Heure française", ylabel="MW", xticks=range(0,24,3))
+        ax.legend(); ax.grid(alpha=.2)
+    fig.suptitle(f"Trois plus fortes RMSE quotidiennes en validation 2024 - {meilleur}")
+    fig.tight_layout()
+    fig.savefig(SORTIE / "trois_echecs.png", dpi=180)
+    plt.close(fig)
 
 
 def graphiques(p, quotidien, classement):
@@ -82,6 +125,9 @@ def graphiques(p, quotidien, classement):
     fig.savefig(SORTIE / "rmse_par_saison.png", dpi=180)
     plt.close(fig)
 
+    # Comparer le meilleur modele et le benchmark selon la temperature observee.
+    tracer_temperature(p, classement)
+
     fig, ax = plt.subplots(figsize=(12, 6))
     for nom in ordre:
         g = p[p.modele.eq(nom)]
@@ -125,21 +171,47 @@ def graphiques(p, quotidien, classement):
 
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--graphiques-seuls", action="store_true")
+    args = parser.parse_args()
+    if args.graphiques_seuls:
+        p = pd.read_csv(RACINE / "results/analyse_2024/previsions_communes.csv", parse_dates=["horodatage"])
+        classement = pd.read_csv(RACINE / "results/analyse_2024/comparaison_globale.csv")
+        validation = pd.read_csv(RACINE / "data/merge/validation.csv", parse_dates=["horodatage"])
+        p = p.merge(validation[["horodatage", "temperature_moyenne"]], on="horodatage", validate="many_to_one")
+        p["jour"] = p.horodatage.dt.normalize()
+        p["heure"] = p.horodatage.dt.hour
+        p["classe_temperature"] = pd.cut(
+            p.temperature_moyenne, [-np.inf, 5, 15, np.inf], right=False,
+            labels=CLASSES[:3],
+        ).cat.add_categories(CLASSES[3]).fillna(CLASSES[3])
+        echecs = pd.read_csv(SORTIE / "trois_echecs.csv", parse_dates=["jour"])
+        meilleur = classement.loc[classement.famille.ne("benchmarks")].iloc[0].modele
+        tracer_temperature(p, classement)
+        tracer_echecs(p, echecs, meilleur)
+        return
     # Refaire les contrôles évite d'utiliser une ancienne synthèse.
     p, classement, jours = verifier()
     SORTIE.mkdir(parents=True, exist_ok=True)
-    calendrier = pd.read_csv(RACINE / "data/merge/validation.csv", parse_dates=["horodatage"])
+    validation = pd.read_csv(RACINE / "data/merge/validation.csv", parse_dates=["horodatage"])
+    train = pd.read_csv(RACINE / "data/merge/train.csv", parse_dates=["horodatage"])
+    historique = pd.concat([train, validation], ignore_index=True)
     colonnes = ["horodatage", "jour_ferie", "weekend", "vacances_scolaires", "temperature_moyenne"]
-    p = p.merge(calendrier[colonnes], on="horodatage", validate="many_to_one")
+    p = p.merge(validation[colonnes], on="horodatage", validate="many_to_one")
     p["jour"] = p.horodatage.dt.normalize()
     p["heure"] = p.horodatage.dt.hour
     p["saison"] = p.horodatage.dt.month.map({12:"hiver", 1:"hiver", 2:"hiver",
         3:"printemps", 4:"printemps", 5:"printemps", 6:"été", 7:"été", 8:"été",
         9:"automne", 10:"automne", 11:"automne"})
+    p["classe_temperature"] = pd.cut(
+        p.temperature_moyenne, [-np.inf, 5, 15, np.inf],
+        right=False, labels=["moins de 5 C", "5 a moins de 15 C", "15 C et plus"],
+    ).cat.add_categories("meteo manquante").fillna("meteo manquante")
     # Moyennes des erreurs horaires ; mêmes dates pour chaque modèle.
-    for variable in ["saison", "heure", "weekend", "jour_ferie", "vacances_scolaires"]:
+    for variable in ["saison", "heure", "weekend", "jour_ferie",
+                     "vacances_scolaires", "classe_temperature"]:
         lignes = [{"modele": nom, variable: valeur, **scores(g)}
-                  for (nom, valeur), g in p.groupby(["modele", variable])]
+                  for (nom, valeur), g in p.groupby(["modele", variable], observed=True)]
         pd.DataFrame(lignes).to_csv(SORTIE / f"scores_par_{variable}.csv", index=False)
     quotidien = pd.DataFrame([{"modele": nom, "jour": jour, **bilan_jour(g)}
                               for (nom, jour), g in p.groupby(["modele", "jour"])])
@@ -156,21 +228,24 @@ def main():
     # Trois pires journées du meilleur modèle hors benchmarks, selon la RMSE horaire.
     meilleur = classement.loc[classement.famille.ne("benchmarks")].iloc[0].modele
     echecs = quotidien.loc[quotidien.modele.eq(meilleur)].nlargest(3, "RMSE_MW").copy()
-    contexte = calendrier.assign(jour=calendrier.horodatage.dt.normalize()).groupby("jour").agg(
-        temperature_moyenne=("temperature_moyenne", "mean"), jour_ferie=("jour_ferie", "max"),
-        weekend=("weekend", "max"), vacances_scolaires=("vacances_scolaires", "max"))
+    contexte = historique.assign(jour=historique.horodatage.dt.normalize()).groupby("jour").agg(
+        temperature_moyenne=("temperature_moyenne", "mean"),
+        consommation_moyenne=("consommation_MW", "mean"),
+        jour_ferie=("jour_ferie", "max"), weekend=("weekend", "max"),
+        vacances_scolaires=("vacances_scolaires", "max"))
+    reference_7j = contexte[["temperature_moyenne", "consommation_moyenne"]].copy()
+    reference_7j.index = reference_7j.index + pd.Timedelta(days=7)
+    reference_7j = reference_7j.rename(columns={
+        "temperature_moyenne": "temperature_7j_avant",
+        "consommation_moyenne": "consommation_7j_avant",
+    })
+    contexte = contexte.join(reference_7j)
     echecs = echecs.merge(contexte, on="jour", validate="one_to_one")
     echecs.to_csv(SORTIE / "trois_echecs.csv", index=False)
-    fig, axes = plt.subplots(len(echecs), 1, figsize=(11, 3.5*len(echecs)), squeeze=False)
     texte = f"# Trois journées d'échec — {meilleur}\n\nSélection : trois plus fortes RMSE quotidiennes sur 2024.\n"
-    for ax, ligne in zip(axes[:, 0], echecs.itertuples()):
-        g = p.loc[p.jour.eq(ligne.jour) & p.modele.eq(meilleur)].sort_values("horodatage")
+    for ligne in echecs.itertuples():
         reference = p.loc[p.jour.eq(ligne.jour) & p.modele.eq("semaine_precedente")].sort_values("horodatage")
-        ax.plot(g.heure, g.reel_MW, label="Observé")
-        ax.plot(g.heure, g.prediction_MW, label=meilleur)
-        ax.plot(reference.heure, reference.prediction_MW, label="Semaine précédente", linestyle="--")
-        ax.set(title=str(ligne.jour.date()), xlabel="Heure française", ylabel="MW", xticks=range(0,24,3))
-        ax.legend(); ax.grid(alpha=.2)
+        rmse_reference = scores(reference)["RMSE_MW"]
         sens = "sous-estimation" if ligne.biais_MW > 0 else "surestimation"
         texte += (f"\n## {ligne.jour.date()}\n\nRMSE : {ligne.RMSE_MW:.0f} MW ; {sens} moyenne "
                   f"de {abs(ligne.biais_MW):.0f} MW. Erreur absolue d'énergie : {abs(ligne.erreur_energie_MWh):.0f} MWh ; "
@@ -179,10 +254,14 @@ def main():
                   f"jour férié : {ligne.jour_ferie} ; vacances : {ligne.vacances_scolaires}.\n\n"
                   "À interpréter : vérifier l'historique utilisé, les variations météorologiques et les effets calendaires. "
                   "Ces constats ne permettent pas, seuls, d'attribuer une cause à l'erreur.\n")
+        texte += (f"Sept jours avant : temperature moyenne "
+                  f"{ligne.temperature_7j_avant:.1f} C et consommation moyenne "
+                  f"{ligne.consommation_7j_avant:.0f} MW. "
+                  f"RMSE du benchmark hebdomadaire : {rmse_reference:.0f} MW.\n")
     texte += ("\nLes températures du jour cible servent uniquement au diagnostic rétrospectif. "
               "Énergie = somme des 24 puissances moyennes multipliées par 1 h. "
               "Heure de pointe : première occurrence du maximum ; distance absolue entre les heures (non circulaire).\n")
-    fig.tight_layout(); fig.savefig(SORTIE / "trois_echecs.png", dpi=180); plt.close(fig)
+    tracer_echecs(p, echecs, meilleur)
     (SORTIE / "ANALYSE_ECHECS.md").write_text(texte, encoding="utf-8")
 
 
