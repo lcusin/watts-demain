@@ -7,9 +7,8 @@ from tempfile import TemporaryDirectory
 import numpy as np
 import pandas as pd
 from modeles_ml import charger as charger_ml, creer_exemples, creer_modeles
-from modeles_statistiques import charger as charger_stat, prevoir_modele, MODELES
 from protocole import HEURE_COUPURE, jours_communs, empreinte, provenance
-from synthese import FICHIERS, scores, verifier
+from synthese import scores, verifier
 
 
 RACINE = Path(__file__).resolve().parent.parent
@@ -27,8 +26,7 @@ def ajouter_resultat(liste, meta, reel, prediction, nom, famille):
 
 
 def calculer_scores(previsions, heures, consommation):
-    attendus = {(famille, nom) for famille, (_, _, _, noms) in FICHIERS.items()
-                for nom in noms}
+    attendus = {("ml", "Random Forest")}
     groupes = previsions.groupby(["famille", "modele"], dropna=False)
     if set(groupes.groups) != attendus:
         raise ValueError("Modeles manquants ou inattendus dans le test.")
@@ -76,55 +74,26 @@ def main():
     X_train, y_train, _ = creer_exemples(donnees, jours_train)
     X_test, y_test, meta_test = creer_exemples(donnees, jours_test)
 
+    nom = "Random Forest"  # Cle exacte de creer_modeles().
+    modele = creer_modeles()[nom]
+    print("Entrainement :", nom, flush=True)
+    modele.fit(X_train, y_train)
     resultats = []
-    modeles = creer_modeles()
-    for nom, modele in modeles.items():
-        print("Entrainement :", nom, flush=True)
-        modele.fit(X_train, y_train)
-        ajouter_resultat(resultats, meta_test, y_test, modele.predict(X_test), nom, "ml")
+    ajouter_resultat(resultats, meta_test, y_test, modele.predict(X_test), nom, "ml")
 
-    # Trois benchmarks calcules sur les memes heures de test.
     consommation = donnees.set_index("horodatage").consommation_MW
-    heures = pd.DatetimeIndex(meta_test.horodatage)
-    pred_semaine = consommation.reindex(heures - pd.Timedelta(days=7)).to_numpy()
-    pred_4_semaines = np.mean([
-        consommation.reindex(heures - pd.Timedelta(days=retard)).to_numpy()
-        for retard in [7, 14, 21, 28]
-    ], axis=0)
-    coupures = heures.normalize() - pd.Timedelta(days=1) + pd.Timedelta(hours=HEURE_COUPURE)
-    pred_persistance = consommation.reindex(coupures).to_numpy()
-    for nom, prediction in [
-        ("persistance", pred_persistance),
-        ("semaine_precedente", pred_semaine),
-        ("moyenne_4_semaines", pred_4_semaines),
-    ]:
-        ajouter_resultat(resultats, meta_test, y_test, prediction, nom, "benchmarks")
-
-    # Reestimer les modeles statistiques avec les donnees disponibles avant 2025.
-    train_s = charger_stat("train.csv")
-    validation_s = charger_stat("validation.csv")
-    test_s = charger_stat("test.csv")
-    consommation_s = pd.concat([train_s, validation_s, test_s])
-    differences = consommation_s.diff(168)
-    for nom, ordre in MODELES.items():
-        lignes = prevoir_modele(nom, ordre, test_s, consommation_s, differences, jours_test)
-        bloc = pd.DataFrame(lignes)
-        bloc["famille"] = "statistiques"
-        resultats.append(bloc[["horodatage", "modele", "famille", "reel_MW", "prediction_MW"]])
-
     previsions = pd.concat(resultats, ignore_index=True)
     heures_attendues = grille[grille.normalize().isin(jours_test)]
     bilan = calculer_scores(previsions, heures_attendues, consommation)
 
     trace = provenance(__file__)
-    for nom in ["data/merge/test.csv", "src/modeles_ml.py", "src/modeles_statistiques.py",
+    for fichier in ["data/merge/test.csv", "src/modeles_ml.py",
                 "src/synthese.py", "data/merge/merge.py", "data/merge/train_valid_test_split.py",
                 "data/temperature/extraction_meteo.py", "data/temperature/chemins.py",
                 "data/conso/preparer_dataset_eco2mix.py", "data/calendrier/data_calendrier_prep.py",
                 "requirements.txt"]:
-        trace["fichiers"][nom] = empreinte(RACINE / nom)
-    trace["parametres_ml"] = {nom: repr(modele) for nom, modele in modeles.items()}
-    trace["ordres_statistiques"] = {nom: list(ordre) for nom, ordre in MODELES.items()}
+        trace["fichiers"][fichier] = empreinte(RACINE / fichier)
+    trace["modele"] = {"famille": "ml", "nom": nom, "parametres": repr(modele)}
     trace["heure_coupure"] = HEURE_COUPURE
 
     # Publier ensemble les trois CSV une fois tous les controles passes.
