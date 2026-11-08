@@ -1,0 +1,31 @@
+{
+  "fichiers": {
+    "data\\merge\\train.csv": "d0b74700f073a378c19fa1a62bd21999bc7817ef4c58406d5c822eebee7d34bf",
+    "data\\merge\\validation.csv": "8efe33504b702b4dbe2e33dc92cd788a6ed3531e4da17774a4297cdd58d81b72",
+    "src\\protocole.py": "5e0390750ebf57e0aa669f602a19c4db9c0f17726caaf7dc7e493b3b3edb03b5",
+    "src\\evaluation_test.py": "b2b560a46c85a867e2ce546f3fccb4a6fa431241c49c8b6c11319c2ce9933c39",
+    "data/merge/test.csv": "9a2969243c3c7b43fbbd4cc2e2e4055e9c1070f99008b8cfe2b7b742f9f0b921",
+    "src/modeles_ml.py": "bc6c933f9e9ca6f1eb16c9c9dffc83f7569c889341d1bbac5ffaeafdbd94d529",
+    "src/synthese.py": "e5a41b38fcc816494ac71a6bd83930e61739e99b8aec3a2e43a1654e3fbf0337",
+    "data/merge/merge.py": "d060386b769fcf4b3898ee4f71c2e6e52e2a2bd77ec7aa9394e62c649210bf61",
+    "data/merge/train_valid_test_split.py": "e67195e165946569745255599061199e5e36754f3d7d5c5e0b74ba61d5973965",
+    "data/temperature/extraction_meteo.py": "d1bfbbc7533629d88918ba5fd02a1f3fecd3b1d56c43627fcab66def6167d4c5",
+    "data/temperature/chemins.py": "8963693fd3f74b306ef0e1d848c8bb4e8fa926a3c6c1f01f3c1ea0756344570d",
+    "data/conso/preparer_dataset_eco2mix.py": "110caf8b140fe93338af65c359b1949f8ce21b5554a180974962fb701fbc0a60",
+    "data/calendrier/data_calendrier_prep.py": "b53f718f5dc13082ed3c4c892ae70232f58c4bfb66d352acc581db758a3a0aa0",
+    "requirements.txt": "62961122cb7a959e4843d0d298fad922336e8824c528d88371c7c14807f18685"
+  },
+  "python": "3.11.7",
+  "versions": {
+    "numpy": "1.26.4",
+    "pandas": "2.1.4",
+    "scikit-learn": "1.2.2",
+    "statsmodels": "0.14.0"
+  },
+  "modele": {
+    "famille": "ml",
+    "nom": "Random Forest",
+    "parametres": "Pipeline(steps=[('simpleimputer',\n                 SimpleImputer(keep_empty_features=True, strategy='median')),\n                ('randomforestregressor',\n                 RandomForestRegressor(max_depth=15, min_samples_leaf=3,\n                                       n_jobs=-1, random_state=42))])"
+  },
+  "heure_coupure": 8
+}
