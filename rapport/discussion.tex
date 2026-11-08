@@ -4,11 +4,72 @@
 \subsection{Disponibilité des données et risques de fuite}
 \noindent
 
+Le contrôle temporel porte sur l'origine $J$ 14~h, et non sur la date de téléchargement des archives. Le tableau~\ref{tab:disponibilite} sépare les informations connues à l'avance des observations dont l'heure effective de publication historique reste incertaine.
+
+\begin{table}[htbp]
+  \centering\fontsize{8}{10}\selectfont\renewcommand{\arraystretch}{1.02}
+  \caption{Informations utilisées à l'origine de prévision $J$ 14~h.}\label{tab:disponibilite}
+  \begin{tabularx}{\linewidth}{p{2.05cm}p{1.55cm}X p{2.15cm}X}
+    \toprule
+    Variable & Source & Disponibilité à $J$ 14~h & Statut et usage & Risque de fuite \\
+    \midrule
+    Calendrier de $J+1$ & Calendrier construit & Connu à l'avance. & Connue ; prédicteur. & Aucune observation future. \\
+    Consommation passée & RTE éCO2mix & Jusqu'à $J$ 8~h ; publication historique non vérifiée. & Observée ; retards et statistiques. & Si publiée après 14~h. \\
+    Météo passée & SYNOP & Mesure nécessaire supposée publiée sous trois heures ; délai non vérifié. & Observée, reconstruite ; prédicteur. & Si la mesure suivante arrive après 14~h. \\
+    Consommation de $J+1$ & RTE éCO2mix & Inconnue à $J$ 14~h. & Observée après coup ; cible seule. & Si employée comme prédicteur. \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+La météo observée pendant $J+1$ reste exclue des prédicteurs.
+
+Les changements d'heure compliquent l'identification des instants dans les 24 étiquettes RTE ; masquer les jours ambigus évite de comparer des heures mal alignées, mais réduit le nombre de journées évaluables. La comparaison 2024 utilise les mêmes dates pour dix méthodes. Après sélection de la forêt sur 2024, 2025 reste indépendant pour l'évaluation de \emph{ce seul modèle} ; ses scores ne doivent pas servir à le régler.
+
 \subsection{Analyse de trois journées d’échec}
 \noindent
+
+Le 24 décembre 2024, la forêt surestime la demande moyenne de 6\,958~MW : la consommation observée est de 58\,505~MW, contre 64\,958~MW une semaine auparavant. La proximité de Noël pourrait jouer un rôle, sans que ces chiffres établissent une cause. Le 21 novembre, elle sous-estime de 7\,118~MW ; la demande observée atteint 66\,002~MW, contre 58\,747~MW sept jours plus tôt. Le 19 janvier, elle sous-estime de 6\,940~MW alors que la demande observée (74\,332~MW) est inférieure à celle d'une semaine auparavant (75\,747~MW). Ces écarts montrent que la seule comparaison hebdomadaire ne suffit pas à expliquer les trois erreurs. Les profils horaires sont généralement suivis, mais le niveau prévu est décalé ; les données disponibles ne permettent pas d'attribuer chaque échec à une cause unique.
 
 \subsection{Robustesse et limites des modèles}
 \noindent
 
+La forêt gagne nettement face aux benchmarks sur 2024 ; dans l'ablation, l'ajout de l'historique de consommation apporte la plus forte baisse de RMSE, alors que celui de la météo \emph{passée} n'apporte que 4,47~MW de gain supplémentaire. Son classement dépend néanmoins du critère : la régression linéaire fait légèrement mieux sur l'énergie quotidienne et la valeur de la pointe. Les erreurs hivernales dépassent celles de l'été ; les huit jours fériés évalués ne permettent pas une conclusion solide sur l'ensemble des jours fériés. Les erreurs AR/ARMA sont autocorrélées, mais leur ACF n'est pas un diagnostic direct de leurs innovations ajustées.
+
+Après réentraînement sans nouveau réglage, la RMSE de la forêt est de 2\,306,95~MW en 2025 contre 2\,383,19~MW en 2024 : les erreurs globales restent du même ordre sur deux années et ensembles de journées distincts. Cette comparaison ne prouve ni une robustesse uniforme selon les saisons, ni un effet causal du réentraînement. Nous déconseillerions une utilisation sans précaution lors des changements d'heure, des journées atypiques proches des fêtes ou des fortes demandes hivernales. Les délais historiques réels de publication, l'agrégation de stations à poids égaux et l'absence de prévisions météo pour $J+1$ limitent aussi la portée d'un déploiement réel.
+
 \subsection{Trois exemples documentés d’usage des agents IA}
 \noindent
+
+Dans le cadre de notre projet Watts Demain, nous avons utilisé ChatGPT pour nous aider à comprendre certains codes, améliorer leur implémentation et vérifier nos méthodes.
+
+Nous présentons trois exemples de son utilisation.
+
+\subsubsection{Proposition conservée : création des benchmarks}
+
+\noindent\textbf{Tâche demandée :} Nous avons demandé de l'aide pour construire deux benchmarks : la consommation de la semaine précédente et la moyenne des quatre semaines précédentes.
+
+\noindent\textbf{Proposition obtenue :} Utiliser la fonction \texttt{shift()} de pandas pour récupérer les consommations des jours précédents.
+
+\noindent\textbf{Décision prise :} Nous avons conservé cette méthode dans notre code.
+
+\noindent\textbf{Vérification :} Nous avons vérifié que les décalages correspondaient aux bonnes dates et que les prévisions étaient calculées uniquement à partir des consommations passées.
+
+\subsubsection{Proposition modifiée : optimisation du code ML}
+
+\noindent\textbf{Tâche demandée :} Nous souhaitions améliorer notre code Machine Learning, car la création des variables explicatives était lente.
+
+\noindent\textbf{Proposition obtenue :} Remplacer certaines boucles par des opérations pandas plus efficaces, comme \texttt{groupby()} et \texttt{merge()}.
+
+\noindent\textbf{Décision prise :} Nous avons modifié notre code ML.py en suivant cette proposition.
+
+\noindent\textbf{Vérification :} Nous avons exécuté le nouveau code et vérifié la création des variables, les dimensions des données et le bon fonctionnement des modèles.
+
+\subsubsection{Faiblesse détectée : erreurs dans le code généré par l'assistant}
+
+\noindent\textbf{Tâche demandée :} Nous avons utilisé ChatGPT pour nous aider à développer et corriger des scripts Python du projet.
+
+\noindent\textbf{Réponse obtenue :} L'assistant a parfois proposé du code contenant des erreurs, notamment en utilisant des noms de variables ou de colonnes qui ne correspondaient pas à ceux de nos fichiers. Certaines propositions ne répondaient pas non plus exactement à notre demande.
+
+\noindent\textbf{Décision prise :} Nous avons corrigé ou adapté ces propositions pour les rendre compatibles avec notre projet.
+
+\noindent\textbf{Vérification :} Nous avons comparé les codes proposés avec nos fichiers existants, vérifié les noms des variables et des colonnes, puis exécuté les scripts pour détecter et corriger les erreurs.
