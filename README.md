@@ -1,6 +1,6 @@
 # Watts Demain — prévision de la consommation électrique
 
-Projet de données temporelles du Master 2 MALIA. À 14 h le jour J, nous prévoyons les 24 consommations horaires de J+1 en France métropolitaine (MW). Le scénario utilise le calendrier connu, la consommation supposée disponible jusqu'à J 8 h et la météo passée supposée publiée à temps. Les délais historiques de publication sont des hypothèses, non des faits vérifiés. Aucune observation de J+1 n'entre dans les prédicteurs.
+À 14 h le jour J, nous prévoyons les 24 consommations horaires de J+1 en France métropolitaine (MW). Le scénario utilise le calendrier connu, la consommation supposée disponible jusqu'à J 8 h et la météo passée supposée publiée à temps. Les délais historiques de publication sont des hypothèses, non des faits vérifiés. Aucune observation de J+1 n'entre dans les prédicteurs.
 
 L'apprentissage initial porte sur 2012–2023, la comparaison et la sélection sur 2024, et le test final indépendant sur 2025. Les journées de changement d'heure et celles sans historique requis complet sont exclues des évaluations, tout en conservant la grille horaire pour les retards.
 
