@@ -1,0 +1,19 @@
+{
+  "objectif": "Prévision de J+1 à J 14 h, validation 2024 uniquement",
+  "statut": "Expérience rétrospective ; résultats 2024 déjà consultés lors du développement",
+  "weeks": 8,
+  "decay": 0.7,
+  "correction": 1.0,
+  "min_weeks": 4,
+  "jours_evalues": 338,
+  "heures_evaluees": 8112,
+  "python": "3.12.7",
+  "numpy": "2.1.3",
+  "pandas": "2.2.3",
+  "sha256_fichiers": {
+    "data\\merge\\train.csv": "d0b74700f073a378c19fa1a62bd21999bc7817ef4c58406d5c822eebee7d34bf",
+    "data\\merge\\validation.csv": "8efe33504b702b4dbe2e33dc92cd788a6ed3531e4da17774a4297cdd58d81b72",
+    "results\\analyse_2024\\benchmarks\\jours_evalues.csv": "24370900385b2d09ba4c3ee4a4b9898d6ba024ce8e9c69ffd4d2b1fbd1f48759",
+    "src\\benchmark_hebdomadaire_adaptatif.py": "36fae04a9383b7572bb2adcc865e6be1bd63421452e3a4162543b7e62efe7dde"
+  }
+}

@@ -1,0 +1,2 @@
+modele,jours,heures,MAE_MW,RMSE_MW,biais_MW,weeks,decay,correction
+Moyenne hebdomadaire adaptative,338,8112,1816.50179900498,2710.280873056087,118.88832722119214,8,0.7,1.0
