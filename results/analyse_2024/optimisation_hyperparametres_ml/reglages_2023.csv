@@ -1,0 +1,14 @@
+modele,reglage,parametres,MAE_2023_MW,RMSE_2023_MW,biais_2023_MW,duree_secondes
+Gradient Boosting,4,"{""gradientboostingregressor__learning_rate"": 0.08, ""gradientboostingregressor__max_depth"": 3, ""gradientboostingregressor__n_estimators"": 150}",1873.5170323186214,2482.860925752813,-886.5859874186622,253.1
+Gradient Boosting,3,"{""gradientboostingregressor__learning_rate"": 0.05, ""gradientboostingregressor__max_depth"": 2, ""gradientboostingregressor__n_estimators"": 200}",2249.583483997026,2941.5044272849814,-1027.6072674964882,225.1
+Gradient Boosting,2,"{""gradientboostingregressor__learning_rate"": 0.06, ""gradientboostingregressor__max_depth"": 2, ""gradientboostingregressor__n_estimators"": 150}",2320.306286256,3019.658029001809,-1063.2847345703683,169.2
+Gradient Boosting,1,"{""gradientboostingregressor__learning_rate"": 0.08, ""gradientboostingregressor__max_depth"": 2, ""gradientboostingregressor__n_estimators"": 80}",2459.7841780352305,3167.674188513578,-1163.2604529918308,88.8
+Random Forest,4,"{""randomforestregressor__max_depth"": 20, ""randomforestregressor__max_features"": 0.7, ""randomforestregressor__min_samples_leaf"": 5, ""randomforestregressor__n_estimators"": 120}",1603.4577545354816,2241.1441447362217,-531.5303512427893,224.1
+Random Forest,3,"{""randomforestregressor__max_depth"": 15, ""randomforestregressor__max_features"": 0.7, ""randomforestregressor__min_samples_leaf"": 2, ""randomforestregressor__n_estimators"": 120}",1631.1854684344198,2261.8503717648555,-553.5737156157196,209.1
+Random Forest,2,"{""randomforestregressor__max_depth"": 20, ""randomforestregressor__max_features"": 1.0, ""randomforestregressor__min_samples_leaf"": 3, ""randomforestregressor__n_estimators"": 100}",1657.6254004371765,2321.149837431838,-607.2287932951682,265.4
+Random Forest,1,"{""randomforestregressor__max_depth"": 15, ""randomforestregressor__max_features"": 1.0, ""randomforestregressor__min_samples_leaf"": 3, ""randomforestregressor__n_estimators"": 100}",1680.644298158396,2344.062324669996,-625.4309875388814,242.1
+Ridge,2,"{""ridge__alpha"": 0.1}",1953.1556303982823,2594.968261778932,285.638301885428,2.3
+Ridge,3,"{""ridge__alpha"": 1.0}",1954.8205106322337,2596.8949681034833,293.2278473489171,2.3
+Ridge,4,"{""ridge__alpha"": 10.0}",1955.3337891723888,2600.73496912502,286.53248186587257,2.2
+Ridge,1,"{""ridge__alpha"": 100.0}",1954.3615956651345,2601.076050700663,236.161607517425,2.4
+Ridge,5,"{""ridge__alpha"": 1000.0}",1966.9264484812848,2603.0842521227783,88.26137767090975,2.3

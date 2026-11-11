@@ -1,0 +1,4 @@
+modele,RMSE_reference_2024_MW,RMSE_reference_recalculee_2024_MW,MAE_2024_MW,RMSE_2024_MW,biais_2024_MW,RMSE_choix_2023_MW,parametres_retenus,temps_refit_et_prediction_s,jours,heures
+Random Forest,2383.187262835686,2383.187262835686,1569.5946511361979,2271.36374919911,-66.80240775779913,2241.1441447362217,"{""randomforestregressor__max_depth"": 20, ""randomforestregressor__max_features"": 0.7, ""randomforestregressor__min_samples_leaf"": 5, ""randomforestregressor__n_estimators"": 120}",530.9,338,8112
+Gradient Boosting,3092.6149225908825,3092.6149225908825,1800.432930729273,2462.626799115843,-451.67946680487677,2482.860925752813,"{""gradientboostingregressor__learning_rate"": 0.08, ""gradientboostingregressor__max_depth"": 3, ""gradientboostingregressor__n_estimators"": 150}",626.3,338,8112
+Ridge,2733.419236690513,2733.4192366952466,2014.1678151058218,2686.301913392268,-380.1662361800344,2594.968261778932,"{""ridge__alpha"": 0.1}",5.4,338,8112
